@@ -1,0 +1,26 @@
+@import '_variables';
+body{
+	background: $background;
+}
+
+.md-button{
+	border: none;
+	background: #6D9DC5;
+	outline: none;
+	color: #FFF;
+	height: 70px;
+	width: 200px;
+	font-size: 1.4em;
+	cursor: pointer;
+}
+
+.photos{
+	img{
+		margin: 15px;
+		box-shadow: 2px 2px 6px #777;
+		transition: transform 0.2s ease;
+		&:hover{
+			transform: scale(1.05);
+		}
+	}
+}

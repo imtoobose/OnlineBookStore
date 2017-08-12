@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load compress %}
+{% block head %}
+	{% compress css %}
+		    	<link rel="stylesheet" type="text/x-scss" href="{% static 'css/home.scss' %}" />
+	{% endcompress %}
+	<title> Online Book Store </title>
+{% endblock %}
+
+{% block content %}
+	<div id="photos" class="photos"></div>
+	<a href="upload-book">
+		<button class="md-button"> Upload </button>
+	</a>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'js/home.js' %}"> </script>
+{% endblock %}

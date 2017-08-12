@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
+migrations/
+db.sqlite3
+
 
 # C extensions
 *.so
@@ -87,11 +90,5 @@ ENV/
 
 # Rope project settings
 .ropeproject
-
-#user_auth/db.sqlite3
-user_auth/login/__pycache__
-user_auth/user_auth/__pycache__
-#user_auth/user_auth/migrations
-#user_auth/login/migrations
 
 .DS_STORE

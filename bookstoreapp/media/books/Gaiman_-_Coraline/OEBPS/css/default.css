@@ -1,0 +1,179 @@
+﻿body
+{
+	margin-right: 8pt;
+}
+ 
+h1,h2,h3,h4,h5,h6
+{
+	text-align:center;
+	page-break-after: avoid;
+	page-break-inside: avoid;
+	
+}
+
+.section_image
+{
+	page-break-inside: avoid;
+	display:block;	
+	text-align:center;
+}
+
+.body_image
+{
+	page-break-inside: avoid;
+	display:block;	
+	text-align:center;
+}
+
+.epigraph
+{
+	font-style: italic;
+	page-break-inside:avoid;
+	margin: 0.5em 0px;
+	margin-bottom: 1em;	
+	font-size:0.9em;
+}
+.epigraph_author
+{
+	margin-left: 1em;
+	font-size:0.85em;
+	margin: 0.6em 0px;
+	margin-left: 2em;	
+}
+
+
+body.cover {
+	margin: 0px;
+	padding: 0px;
+}
+svg.cover-svg {
+	height: 100%;
+	width: 100%;
+}
+img {
+	max-width: 95%;
+}
+div.img {
+	padding: 3px;
+	text-align: center;
+}
+div.title1 {
+	page-break-after: avoid;
+	page-break-inside: avoid;
+	font-weight: bold;
+	margin: 1em 0px 0.5em 0px;
+	font-size: 1.4em;
+	text-align: center;
+}
+p.title-p {
+	margin: 0px 0px 0.5em 0px;
+}
+div.title2 {
+	page-break-after: avoid;
+	page-break-inside: avoid;
+	font-weight: bold;
+	margin: 1em 0px 0.5em 1.5625em;
+	font-size: 1.1em;
+}
+div.title3 {
+	page-break-after: avoid;
+	page-break-inside: avoid;
+	font-weight: bold;
+	margin: 1em 0px 0.5em 1.923em;
+	font-size: 1.0em;
+}
+p {
+	margin: 0px;
+	margin-top:0;
+	margin-bottom:0;
+	text-indent: 1.5em;
+	text-align: justify;
+}
+p.subtitle {
+	font-style: italic;
+	page-break-after: avoid;
+	page-break-inside: avoid;
+	font-weight: bold;
+	text-indent: 0px;
+	margin: 0.5em 2em;
+	text-align: center;
+}
+
+p.empty-line {
+	height: 1em;
+	margin: 0px;
+}
+a {
+	vertical-align: super;
+	line-height: 0.1;
+	font-size: 0.7em;
+}
+div.annotation {
+	font-style: italic;
+	margin: 0em 0px 0em 0em;
+	text-indent: 0px;
+	font-size:smaller;
+}
+
+div.citation
+{
+	font-style: italic;
+	margin: 1em 0px 1em 2em;
+	text-indent: 0px;
+}
+
+div.poem {
+	margin: 0.5em 15% 0.5em 15%;
+	text-align: center;
+}
+div.stanza {
+	page-break-inside: avoid;
+	margin: 0.5em 0px;
+	justify: left;
+}
+p.v {
+	padding-left: 1em;
+	text-indent: -1em;
+	margin: 0px;
+	justify: left;
+}
+div.section {
+}
+div.title4 {
+	page-break-after: avoid;
+	page-break-inside: avoid;
+	font-weight: bold;
+	margin: 1em 0px 0.5em 2.083em;
+	font-size: 1.0em;
+}
+
+a.note_anchor
+{
+	font-size: larger;
+	vertical-align:middle;
+	text-align:center;
+}
+
+p.note_section
+{
+	text-align: center;
+	display: block;
+}
+
+div.coverpage
+{
+	text-align:	center;
+	page-break-after: always;	
+}
+
+img.coverimage
+{
+	max-width:100%;	
+	height:100%;
+}
+
+div.titlepage
+{
+	text-align: center;
+	page-break-after: always;	
+}

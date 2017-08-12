@@ -1,0 +1,19 @@
+/* line 2, bookstoreapp/static/css/home.scss */
+body {
+  background: white; }
+
+/* line 6, bookstoreapp/static/css/home.scss */
+.md-button {
+  border: none;
+  background: #6D9DC5;
+  outline: none;
+  color: #FFF;
+  height: 70px;
+  width: 200px;
+  font-size: 1.4em;
+  cursor: pointer; }
+
+/* line 18, bookstoreapp/static/css/home.scss */
+.photos img {
+  margin: 15px;
+  border: black solid 2px; }
