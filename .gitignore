@@ -93,5 +93,4 @@ ENV/
 
 .DS_STORE
 CACHE/
-node_modules/
 media/
