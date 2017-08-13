@@ -1,12 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html class="mdc-typography">
 	<head>
+		<link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
+		<link rel="stylesheet"
+          href="{% static 'node_modules/material-components-web/dist/material-components-web.css' %}">
+        <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 			{% block head %} {% endblock %}
 			{% block title %} {% endblock %}
+
 	</head>
 	<body>
 		{% block content %} {% endblock %}
 	</body>
 	<script src="{% static 'js/qwest.min.js' %}"></script>
-	{% block scripts %} {% endblock %}
+	<script src="{% static 'node_modules/material-components-web/dist/material-components-web.js' %}"></script>
+	<script>mdc.autoInit()</script>
+	{% block scripts %}
+	{% endblock %}
+	<script>
+		var toolbar = mdc.toolbar.MDCToolbar.attachTo(document.querySelector('.mdc-toolbar'));
+	  	toolbar.fixedAdjustElement = document.querySelector('.mdc-toolbar-fixed-adjust');
+	</script>
 </html>

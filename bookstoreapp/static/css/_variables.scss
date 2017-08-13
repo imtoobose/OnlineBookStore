@@ -1,1 +1,5 @@
-$background: white;
+$mdc-theme-primary: #607D8B;
+$mdc-theme-accent: #FF5722;
+$mdc-theme-background: #FFF;
+
+@import "../node_modules/@material/theme/mdc-theme";

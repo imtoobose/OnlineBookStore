@@ -1,0 +1,24 @@
+.mdc-toolbar__title{
+	font-size: 1.2rem;
+	font-weight: 700;
+	letter-spacing: 200;
+}
+
+body, html{
+	background: $mdc-theme-background;
+	padding: 0px;
+	margin: 0px;
+	position: relative;
+}
+
+@mixin paddingLeft($per, $minw){
+	&:before{
+		content: '';
+		display: inline-block;
+		position:relative;
+		width: $per;
+		max-width: $minw;
+		height: 10px;
+		font-size: 1.2rem;
+	}
+}

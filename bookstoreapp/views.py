@@ -4,6 +4,11 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 
+print('Loading Spacy')
+import spacy
+nlp = spacy.load('en')
+print('Done loading Spacy')
+
 import os
 import pickle
 import time
@@ -13,6 +18,7 @@ from PIL import Image
 
 from .models import Book
 from .modules.epubtotext import convert, __get_extension__, __get_file_name__
+from .modules.epubnlp import get_nlp_features
 
 def home(req):
 	# return HttpResponse('home sweet home <br> <a href="upload-book">'
@@ -61,7 +67,7 @@ def upload_book(req):
 
 			img = os.path.join(media_path, iname)
 			im = Image.open(os.path.join(pro, meta['cover']))
-			im.thumbnail((188, 188))
+			im.thumbnail((350, 350))
 			im.save(img)
 
 		else:
@@ -82,7 +88,7 @@ def upload_book(req):
 					publication=meta['publication'],
 					genre=meta['subjects'],
 					image_link=(settings.MEDIA_URL + iname),
-					)
+				)
 
 		book.save()
 		return redirect(home)
