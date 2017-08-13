@@ -5,7 +5,6 @@ import string
 from operator import itemgetter
 import os
 import pickle
-import matplotlib.pyplot as plt
 
 def chunk_load(f, chunk_size=1024):
     while True:
@@ -38,11 +37,11 @@ def get_nlp_features(book_path, nlp):
                         if ent.label_ == 'PERSON':
                             people.append(ent.text)
 
+                    del text
+
             
             if count > 30:
                 verbcount.append({'chap': chap['chapname'], 
                                   'count': count/text_word_len})
-
-            del text
 
     return verbcount, Counter(people)

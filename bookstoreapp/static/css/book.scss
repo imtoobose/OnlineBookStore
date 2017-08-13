@@ -1,0 +1,39 @@
+@import '_variables';
+@import 'common';
+
+body * {
+	z-index: 2;
+}
+
+.book-card{
+	min-height: 200px;
+	background: $mdc-theme-background;
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	
+	.mdc-card__primary{
+		background: #FFF;
+	}
+}
+
+.description-card{
+	background: $mdc-theme-background;
+	justify-content: flex-start;
+	
+	.book-description{
+		height: 150px;
+		overflow-y: auto;
+	}
+}
+
+.background_cover{
+	background: $mdc-theme-accent;
+	content: '';
+	height: $background-cover-size;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1;
+}

@@ -34,7 +34,9 @@ class Book(models.Model):
     active = models.BooleanField(default=True)
     genre = models.TextField(default="", blank=True)
     slug = models.SlugField(max_length=75, editable=False, default='unnamed-book')
-
+    graph_data = models.TextField(default=None, null=True, blank=True)
+    ners = models.TextField(default=None, null=True, blank=True)
+    
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title[:75]
                             if len(self.title) >

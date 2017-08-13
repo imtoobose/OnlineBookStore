@@ -1,5 +1,10 @@
 $mdc-theme-primary: #607D8B;
-$mdc-theme-accent: #FF5722;
+$mdc-theme-accent: #F44336;
 $mdc-theme-background: #FFF;
 
 @import "../node_modules/@material/theme/mdc-theme";
+
+$background-cover-size: 280px;
+
+$content-title-font-size: 1.2rem;
+$content-subtitle-font-size: 1rem;

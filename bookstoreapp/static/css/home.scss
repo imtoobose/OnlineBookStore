@@ -17,7 +17,6 @@ body * {
 }
 
 .photo-grid{
-	// width: 80%;
 	padding-left: 13%;
 	padding-right: 9%;
 	margin: 0 auto;
@@ -73,25 +72,15 @@ body * {
 	padding-bottom: 10px;
 }
 
-.swipe-header{
-	color: #EEE;
-	font-weight: 700;
-	font-size: 1.2rem;
-	// &:before{
-	// 	content: '';
-	// 	display: inline-block;
-	// 	position:relative;
-	// 	width: 10%;
-	// 	max-width: 100px;
-	// 	height: 10px;
-	// 	font-size: 1.2rem;
-	// }
-
-	@include paddingLeft(10%, 100px);
+.carousel{
+	.content-title, .content-subtitle{
+		color: #EEE;
+		@include paddingLeft(10%, 100px);
+	}
 }
 
 .swiper-button-prev, .swiper-button-next{
-	background: white;
+	background: $mdc-theme-background;
 	border-radius: 50%;
 	height: 40px;
 	width: 40px;
@@ -99,10 +88,7 @@ body * {
 	transition: opacity 0.2s ease;
 
 	.swiper-button{
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
+		@include centerAbsolute;
 		font-size: 20px;
 	}
 

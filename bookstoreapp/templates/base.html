@@ -12,7 +12,12 @@
 
 	</head>
 	<body>
-		{% block content %} {% endblock %}
+		{% block header %}
+		{% endblock %}
+		<main class="mdc-toolbar-fixed-adjust">
+			{% block content %}
+			{% endblock %}
+		</main>
 	</body>
 	<script src="{% static 'js/qwest.min.js' %}"></script>
 	<script src="{% static 'node_modules/material-components-web/dist/material-components-web.js' %}"></script>

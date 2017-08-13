@@ -8,26 +8,17 @@
 	<title> OnLib | Home</title>
 {% endblock %}
 
+{% block header %}
+	{% include "header.html" %}
+{% endblock %}
+
 {% block content %}
-	<!-- Header -->
-	<header class="mdc-toolbar mdc-toolbar--fixed home-tool mdc-toolbar--waterfall">
-	  <div class="mdc-toolbar__row">
-	    <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
-	      <span class="mdc-toolbar__title">OnLib</span>
-	    </section>
-	  </div>
-	</header>
-	
-	<main class="mdc-toolbar-fixed-adjust">
-	  <p class="demo-paragraph">
-	  </p>
-	</main>
-	<!-- End Header -->
 	<br>
 
 	<!-- Home Page Carousel -->
 	<div class="carousel">
-		<h1 class="swipe-header"> Featured Books </h1>
+		<h1 class="content-title"> Featured Books </h1>
+		<h3 class="content-subtitle"> The Best Of Our Catalog </h3>
 		<div class="swiper-container">
 		    <div id="swiper-wrapper" class="swiper-wrapper"></div>
 		    <div id="swiper-button-prev" class="swiper-button-prev">
@@ -45,7 +36,8 @@
 
 	<!-- Home Page Grid -->
 	<div class="mdc-layout-grid photo-grid">
-		<h3> Catalog </h3>
+		<h1 class="content-title"> Catalog </h3>
+		<h3 class="content-subtitle"> Every book available </h3>
 		<div id="photos" class="photos mdc-layout-grid__inner"></div>
 	</div>
 	<!-- End of Grid -->

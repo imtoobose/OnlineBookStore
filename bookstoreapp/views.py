@@ -79,6 +79,11 @@ def upload_book(req):
 			pub_date = date_parser.parse(meta['pub_date'])
 			print(meta['pub_date'])
 
+		print('Creating NLP features')
+		verbs, ners = get_nlp_features(pro, nlp)
+		print('Done with NLP features')
+		print(verbs, ners)
+
 		book = Book(
 					title=meta['title'],
 					author=meta['author'],
@@ -88,13 +93,21 @@ def upload_book(req):
 					publication=meta['publication'],
 					genre=meta['subjects'],
 					image_link=(settings.MEDIA_URL + iname),
+					graph_data=json.dumps(verbs),
+					ners=json.dumps(ners.most_common(20)),
 				)
 
 		book.save()
 		return redirect(home)
 
 
-def view_book(req, book_id, book_slug):
+def view_book(req, book_id):
 	book = get_object_or_404(Book, pk=book_id)
 	bdict = book.to_dict()
 	return JsonResponse(bdict)
+
+
+def view_book_html(req, book_id, book_slug):
+	return render(req, 'book.html', {
+		'id': book_id,
+	})
