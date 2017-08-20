@@ -5,6 +5,7 @@ import string
 from operator import itemgetter
 import os
 import pickle
+import matplotlib.pyplot as plt
 
 def chunk_load(f, chunk_size=1024):
     while True:
@@ -13,7 +14,7 @@ def chunk_load(f, chunk_size=1024):
             break
         yield text
 
-def get_nlp_features(book_path, nlp):
+def get_nlp_features(book_path, nlp, plot=False):
     with open(os.path.join(book_path, 'meta.pkl'),'rb') as f:
         m = pickle.load(f)
         arr = m['chapters']
@@ -43,5 +44,20 @@ def get_nlp_features(book_path, nlp):
             if count > 30:
                 verbcount.append({'chap': chap['chapname'], 
                                   'count': count/text_word_len})
+
+    if plot:
+        x = [y for y in range(0, len(verbcount))]
+        y = [xx['count'] for xx in verbcount]
+        ticks = [xx['chap'] for xx in verbcount]
+        plt.plot(x, y, linestyle='-', marker='o')
+        if not book_name == None:
+            plt.title(book_name)
+
+        plt.xticks(x, ticks, rotation='vertical')
+        plt.xlabel('Chapter')
+        plt.ylabel('Normalized Verb Count')
+        plt.tick_params(axis='both', which='major', labelsize=8)
+        plt.tight_layout()
+        plt.show()
 
     return verbcount, Counter(people)

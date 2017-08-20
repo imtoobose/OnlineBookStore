@@ -1,0 +1,16 @@
+{
+  "name": "onlinebookstore",
+  "version": "1.0.0",
+  "description": "online book store",
+  "main": "index.js",
+  "dependencies": {
+    "chart.js": "^2.6.0",
+    "material-components-web": "^0.17.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Saumitra Bose",
+  "license": "MIT"
+}

@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% load compress %}
-{% block head %}
+{% block head  %}
+	<title> Onlib | {{book_name}} </title>
 	{% compress css %}
 		<link rel="stylesheet" type="text/x-scss" href="{% static 'css/book.scss' %}" />
 	{% endcompress %}
-	<title> Online Book Store </title>
 {% endblock %}
-
 {% block header %}
 	{% include "header.html" %}
 {% endblock %}
@@ -39,11 +38,23 @@
 		</div>
 	</div>
 
+	<div class="mdc-layout-grid chapter-graph-grid">
+		<div class="mdc-layout-grid__inner">
+			<section class="mdc-layout-grid__cell--span-4 mdc-card">
+				
+			</section>
+			<section id="graph-card" class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8">
+				<canvas id="chapter-graph"></canvas>
+			</section>
+		</div>
+	</div>
+
 	<div class="background_cover">
 	</div>
 
 {% endblock %}
 
 {% block scripts %}
+	<script src="{% static 'node_modules/chart.js/dist/Chart.min.js' %}"></script>
 	<script src="{% static 'js/book.js' %}"></script>
 {% endblock %}

@@ -95,6 +95,7 @@ def upload_book(req):
 					image_link=(settings.MEDIA_URL + iname),
 					graph_data=json.dumps(verbs),
 					ners=json.dumps(ners.most_common(20)),
+					epub_link=(settings.MEDIA_URL + os.path.join('books', fname)),
 				)
 
 		book.save()
@@ -110,4 +111,5 @@ def view_book(req, book_id):
 def view_book_html(req, book_id, book_slug):
 	return render(req, 'book.html', {
 		'id': book_id,
+		'book_name': ' '.join(book_slug.split('-')).title()
 	})

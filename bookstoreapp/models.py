@@ -24,19 +24,20 @@ def __convert_to_dict__(obj):
 
 
 class Book(models.Model):
-    author = models.CharField(max_length=30, default="", null=True)
-    title = models.CharField(max_length=30, default="", null=True)
+    author = models.CharField(max_length=300, default="", null=True)
+    title = models.CharField(max_length=1000, default="", null=True)
     description = models.TextField(default="", null=True)
-    language = models.CharField(max_length=3, default="en", null=True)
-    publication = models.CharField(max_length=200, default="", null=True)
+    language = models.CharField(max_length=30, default="en", null=True)
+    publication = models.CharField(max_length=1000, default="", null=True)
     pub_date = models.DateField(default=None, null=True)
     image_link = models.CharField(default=None, max_length=1000, null=True)
     active = models.BooleanField(default=True)
     genre = models.TextField(default="", blank=True)
-    slug = models.SlugField(max_length=75, editable=False, default='unnamed-book')
+    slug = models.SlugField(max_length=100, editable=False, default='unnamed-book')
     graph_data = models.TextField(default=None, null=True, blank=True)
     ners = models.TextField(default=None, null=True, blank=True)
-    
+    epub_link = models.CharField(default=None, max_length=1000, null=True, blank=True)
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title[:75]
                             if len(self.title) >
