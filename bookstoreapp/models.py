@@ -57,7 +57,6 @@ class Book(models.Model):
     def to_dict(self):
         return __convert_to_dict__(self)
 
-<<<<<<< HEAD
     def update_ratings(self, new_rating, old_rating=-1.0):
         if old_rating == -1.0:
             self.avg_rating = (self.avg_rating * self.num_ratings + new_rating)/(self.num_ratings + 1)
@@ -66,12 +65,6 @@ class Book(models.Model):
             self.avg_rating = (self.avg_rating * self.num_ratings + new_rating - old_rating)/(self.num_ratings) 
         super(Book, self).save()
         return self.avg_rating
-=======
-    def update_ratings(self, rating):
-        self.rating = (self.rating * self.num_ratings + rating)/(self.num_ratings + 1)
-        self.num_ratings += 1
-        super(Book, self).save()
->>>>>>> 34b3df9d80c45338222eee06410cb2ae1c13f089
 
 
 class UserProfile(models.Model):
@@ -85,9 +78,5 @@ class UserProfile(models.Model):
 
 class Rating(models.Model):
     rating = models.FloatField(default=0.0, null=True, blank=True)
-<<<<<<< HEAD
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-=======
-    user = models.ForeignKey(UserProfile, null=True, blank=True, on_delete=models.CASCADE)
->>>>>>> 34b3df9d80c45338222eee06410cb2ae1c13f089
     book = models.ForeignKey(Book, null=True, blank=True, on_delete=models.CASCADE)
