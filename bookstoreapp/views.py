@@ -15,14 +15,15 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
 # User defined module imports
-from .models import Book
+from .models import Book, UserProfile, Rating
 from .modules.epubtotext import convert, __get_extension__, __get_file_name__
 from .modules.epubnlp import get_nlp_features
 
 
-# Global Variables
 nlp = None
 
 
@@ -31,14 +32,14 @@ def home(req):
 
 
 def get_books(req):
-	books = Book.objects.all()
-	send_data = {'data': []}
-	for book in books:
-		bdict = book.to_dict()
-		bdict['url'] = book.get_url()
-		send_data['data'].append(bdict)
+    books = Book.objects.all()
+    send_data = {'data': []}
+    for book in books:
+        bdict = book.to_dict()
+        bdict['url'] = book.get_url()
+        send_data['data'].append(bdict)
 
-	return JsonResponse(send_data)
+    return JsonResponse(send_data)
 
 
 def upload_book(req):
@@ -144,14 +145,80 @@ def get_author_description(author):
 
 	return desc, author_photo
 
+
 def view_book(req, book_id):
-	book = get_object_or_404(Book, pk=book_id)
-	bdict = book.to_dict()
-	return JsonResponse(bdict)
+    book = get_object_or_404(Book, pk=book_id)
+    bdict = book.to_dict()
+    return JsonResponse(bdict)
 
 
 def view_book_html(req, book_id, book_slug):
-	return render(req, 'book.html', {
-		'id': book_id,
-		'book_name': ' '.join(book_slug.split('-')).title()
-	})
+    return render(req, 'book.html', {
+        'id': book_id,
+        'book_name': ' '.join(book_slug.split('-')).title()
+    })
+
+
+def contact(request):
+    return render(request, 'contact.html', {})
+
+
+def about(request):
+    return render(request, 'about.html', {})
+
+
+def signup(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated():
+            return redirect(home)
+        else:
+            return render(request, 'signup.html', {})
+    
+    elif request.method == 'POST':
+        username = request.POST['name']
+        password = request.POST['pass']
+        roll_no = request.POST['roll']
+        email = request.POST['email']
+
+        user = User.objects.create_user(username=roll_no,
+                                         email=email,
+                                         password=password)
+        user.save()
+
+        userProfile = UserProfile(
+                        user=user,
+                        name=username
+                      )
+
+        userProfile.save()
+
+        return redirect(reverse('login'))
+
+
+def signin(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated():
+            return redirect(home)
+
+        else:
+            return render(request, 'login.html', {})
+
+    elif request.method == 'POST':
+        username = request.POST['name']
+        password = request.POST['pass']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect(reverse('home'))
+
+        else:
+            print ("Invalid login details: {0}, {1}".format(username, password))
+            return redirect(reverse('login'))
+
+        return redirect(reverse('home'))
+
+
+def signout(request):
+    if request.user.is_authenticated():
+        logout(request)
+        return redirect(reverse('home'))

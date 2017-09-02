@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-
 from django.db import models
 from django.db import models
 from django.contrib.auth.models import User
@@ -37,7 +36,7 @@ class Book(models.Model):
     slug = models.SlugField(max_length=100, editable=False, default='unnamed-book')
     graph_data = models.TextField(default=None, null=True, blank=True)
     ners = models.TextField(default=None, null=True, blank=True)
-    rating = models.FloatField(default=0.0, null=True, blank=True)
+    avg_rating = models.FloatField(default=0.0, null=True, blank=True)
     num_ratings = models.IntegerField(default=0, null=True, blank=True)
     epub_link = models.CharField(default=None, max_length=1000, null=True, blank=True)
     folder_link = models.CharField(default=None, max_length=1000, null=True, blank=True)
@@ -67,6 +66,8 @@ class Book(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
     active = models.BooleanField(default=True)
+    is_faculty = models.BooleanField(default=False)
+    name = models.CharField(default='Anonymous', max_length=1000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
