@@ -24,6 +24,11 @@
 						<h1 id="book-title" class="mdc-card__title mdc-card__title--large">
 						</h1>
 						<h2 id="book-author" class="mdc-card__subtitle"></h2>
+						<section id="book-ratings" class="mdc-card__subtitle">
+							{% for count in '12345' %}
+								<i id="book-rating-star-{{forloop.counter}}" class="fa fa-star rating-star rating-star-inactive"></i>
+							{% endfor %}
+						</section>
 						<hr>
 					</div>
 					
@@ -40,11 +45,22 @@
 
 	<div class="mdc-layout-grid chapter-graph-grid">
 		<div class="mdc-layout-grid__inner">
-			<section class="mdc-layout-grid__cell--span-4 mdc-card">
-				
+			<section class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8">
+				<section id="user-ratings" class="user-ratings">
+					<p class="thin-header"> YOUR REVIEW </p>
+				{% for count in '12345' %}
+					<button id="{{forloop.counter}}-user-rating" class="btn-rating-star">
+						<i id="user-rating-star-{{forloop.counter}}" class="fa fa-star rating-star rating-star-inactive user-rating-star"></i>
+					</button>
+				{% endfor %}
+				</section>
+
+				<div id="graph-card">
+					<canvas id="chapter-graph"></canvas>
+				</div>
 			</section>
-			<section id="graph-card" class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8">
-				<canvas id="chapter-graph"></canvas>
+
+			<section class="mdc-layout-grid__cell--span-4">
 			</section>
 		</div>
 	</div>

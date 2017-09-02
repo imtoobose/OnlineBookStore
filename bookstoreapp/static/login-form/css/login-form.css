@@ -51,10 +51,10 @@
 .input input,
 .input .spin,
 .button,
-.button button .button.login button i.fa,
+.button input[type='submit'] .button.login input[type='submit'] i.fa,
 .material-button .shape:before,
 .material-button .shape:after,
-.button.login button {
+.button.login input[type='submit'] {
    transition: 300ms cubic-bezier(.4, 0, .2, 1);
    -webkit-transition: 300ms cubic-bezier(.4, 0, .2, 1);
    -ms-transition: 300ms cubic-bezier(.4, 0, .2, 1);
@@ -75,7 +75,7 @@
 .input input,
 .input .spin,
 .button,
-.button button {
+.button input[type='submit'] {
    width: 100%;
    float: left;
 }
@@ -89,7 +89,7 @@
 .input,
 .input input,
 .button,
-.button button {
+.button input[type='submit'] {
    position: relative;
 }
 
@@ -102,7 +102,7 @@
 
 .input input,
 .input label,
-.button button {
+.button input[type='submit'] {
    font-family: 'Roboto', sans-serif;
    font-size: 24px;
    color:#f44336;
@@ -156,8 +156,8 @@
    left: 20%;
 }
 
-.button.login button,
-.button button {
+.button.login input[type='submit'],
+.button input[type='submit'] {
    width: 100%;
    line-height: 64px;
    left: 0%;
@@ -176,33 +176,33 @@
    margin-top: 20px;
 }
 
-.button button {
+.button input[type='submit'] {
    background-color:#f44336;
    color: #fff;
    border:3px solid white;
 
 }
 
-.button.login button.active {
+.button.login input[type='submit'].active {
    border: 3px solid transparent;
    color: #fff !important;
 }
 
-.button.login button.active span {
+.button.login input[type='submit'].active span {
    opacity: 0;
    transform: scale(0);
    -webkit-transform: scale(0);
    -ms-transform: scale(0);
 }
 
-.button.login button.active i.fa {
+.button.login input[type='submit'].active i.fa {
    opacity: 1;
    transform: scale(1) rotate(-0deg);
    -webkit-transform: scale(1) rotate(-0deg);
    -ms-transform: scale(1) rotate(-0deg);
 }
 
-.button.login button i.fa {
+.button.login input[type='submit'] i.fa {
    width: 100%;
    height: 100%;
    position: absolute;
@@ -218,7 +218,7 @@
  color:#fff;
  border:color:#fff;
 }
-.button.login button:hover {
+.button.login input[type='submit']:hover {
    color: #f44336;
    border-color: #f44336;
 }
@@ -229,7 +229,7 @@
    z-index: 2;
 }
 
-.button button {
+.button input[type='submit'] {
    cursor: pointer;
    position: relative;
    z-index: 2;

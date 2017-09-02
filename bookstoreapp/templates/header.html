@@ -3,9 +3,16 @@
     <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
       <a id="toolbar-hamburger" href="#" class="fa mdc-toolbar__icon--menu fa-bars" style="font-size: 20px"></a>
       <a href="{% url 'home'%}" class="mdc-toolbar__title" style="text-decoration: none; color:#FFF">OnLib</a>
-      <a href="{% url 'login'%}" class="mdc-toolbar__title" style="text-decoration: none; color:#FFF">Login</a>
-      <a href="{% url 'signup'%}" class="mdc-toolbar__title" style="text-decoration: none; color:#FFF">Sign-Up</a>
       <a href="{% url 'contact'%}" class="mdc-toolbar__title" style="text-decoration: none; color:#FFF">Contact</a>
       <a href="{% url 'about'%}" class="mdc-toolbar__title" style="text-decoration: none; color:#FFF">About</a>
+      </section>
+      <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
+	      {% if not user.is_authenticated %}
+	      <a href="{% url 'login'%}" class="mdc-toolbar__title" style="text-decoration: none; color:#FFF">Login</a>
+	      <a href="{% url 'signup'%}" class="mdc-toolbar__title" style="text-decoration: none; color:#FFF; margin-right: 25px">Sign-Up</a>
+	      {% else %}
+	      <a href="{% url 'logout'%}" class="mdc-toolbar__title" style="text-decoration: none; color:#FFF; margin-right: 25px">Logout</a>
+	      {% endif %}
+      </section>
   </div>
 </header>

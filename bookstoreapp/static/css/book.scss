@@ -27,6 +27,31 @@ body * {
 	}
 }
 
+.author-card{
+	justify-content: flex-start;
+
+	.author-header{
+		@include paddingLeft(5px, 30px);
+
+	}
+
+	.author-img{
+		background-size: cover;
+		height: 150px;
+		width: 120px;
+		background-repeat: no-repeat;
+		background-position: center;
+		margin-left: 5%;
+
+		@include paddingLeft(10px, 50px);
+	}
+
+	.author-desc{
+		max-height: 250px;
+		overflow-y: auto;
+	}
+}
+
 .background_cover{
 	background: $mdc-theme-accent;
 	content: '';
@@ -40,5 +65,40 @@ body * {
 
 .chapter-graph-grid{
 	padding-top: 0px;
-	margin-top: 5px;
+	margin-top: 3px;
+}
+
+
+.user-ratings{
+	position: relative;
+	padding: 30px 50px 0 50px;
+
+	.thin-header{
+		padding: 0;
+		margin-bottom: 5px;
+		font-size: 14px;
+		// text-align: center;
+	}
+}
+
+.btn-rating-star{
+	background: none;
+	border: none;
+	outline: none;
+	padding: none;
+	margin: none;
+	cursor: pointer;
+	font-size: 1.5rem;
+}
+
+.rating-star-active{
+	color: $mdc-theme-accent;
+}
+
+.rating-star-inactive{
+	color: #000;
+}
+
+i.rating-star{
+	pointer-events: none;
 }

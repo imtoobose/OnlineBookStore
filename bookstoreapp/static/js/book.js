@@ -1,4 +1,5 @@
 var book_id = document.getElementById('get-id').value
+var user_rating = 0, book_rating = 0
 
 function loadImage(src){
 	var bookcard = document.getElementById('book-card')
@@ -86,9 +87,69 @@ function setDetails(res){
 	document.getElementById('book-author').innerText = res['author']
 }
 
+function setRatingListener(){
+	$('.btn-rating-star').on('click', function(){
+		console.log('clicked', this.id)
+		var id = Number(this.id.split('-')[0])
+		qwest.post('/update-ratings/', {
+			rating: id,
+			book_id: book_id
+		})
+		.then(function(xhr, response){
+			user_rating = id
+			console.log(response.data.book_rating)
+		})
+	})
+
+	$('.btn-rating-star').hover(function(e){
+		var id = e.target.id.split('-')[0]
+		updateRatings(id)
+	}, function(){
+		updateRatings(user_rating)
+	})
+}
+
+function updateRatings(rating){
+	var i = 1, ur = Math.floor(rating)
+	for(; i <= 5; i ++){
+		if(i<=ur) {
+			$('#user-rating-star-' + i)
+			.addClass('rating-star-active')
+			.removeClass('rating-star-inactive')
+		}
+		else{
+			$('#user-rating-star-' + i)
+			.addClass('rating-star-inactive')
+			.removeClass('rating-star-active')
+		}
+	}
+}
+
+function updateBookRatings(rating){
+	var i = 1, ur = Math.floor(rating)
+	for(; i <= 5; i ++){
+		if(i<=ur) {
+			$('#book-rating-star-' + i)
+			.addClass('rating-star-active')
+			.removeClass('rating-star-inactive')
+		}
+		else{
+			$('#book-rating-star-' + i)
+			.addClass('rating-star-inactive')
+			.removeClass('rating-star-active')
+		}
+	}	
+}
+
 qwest.get('/get-book/' + book_id + '/')
 	.then(function(xhr, res){
+		console.log(res)
+		user_rating = Number(res['user_rating'])
+		book_rating = Number(res['avg_rating'])
+		updateRatings(user_rating)
+		updateBookRatings(book_rating)
 		loadImage(res['image_link'])
 		loadGraph(res['graph_data'])
+		setRatingListener()
 		setDetails(res)
 })

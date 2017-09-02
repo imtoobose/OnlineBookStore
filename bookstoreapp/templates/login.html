@@ -10,12 +10,9 @@
 {%block header%}
 {% endblock%}
 <div class="materialContainer">
-
-
-   <div class="box">
-
+   <form class="box" action="/login/" method="POST">
+      {% csrf_token %}
       <div class="title">Student Login</div>
-
       <div class="input">
          <label for="name">Roll Number</label>
          <input type="text" name="name" id="name">
@@ -29,13 +26,11 @@
       </div>
 
       <div class="button login">
-         <button><span>Login</span> <i class="fa fa-check"></i></button>
+         <input type="submit" value="Login"></button>
       </div>
-
       <a href="" class="pass-forgot">Forgot your password?</a>
-
-
-   </div>
+      <a href="{% url 'signup' %}" class="pass-forgot" style="margin-top: 10px">Register</a>
+   </form>
 
    <div class="overbox">
       <div class="material-button alt-2"><span class="shape"></span></div>

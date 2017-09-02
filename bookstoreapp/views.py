@@ -1,32 +1,34 @@
-from django.shortcuts import get_object_or_404, render, redirect, reverse
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
-from django.http import HttpResponse, JsonResponse
-from django.conf import settings
-from .form import NameForm
-from .models import NameForm
-print('Loading Spacy')
-import spacy
-
-nlp = spacy.load('en')
-print('Done loading Spacy')
-
+# Python imports
 import os
 import pickle
 import time
 from dateutil import parser as date_parser
 import json
 from PIL import Image
+from lxml import etree
+from lxml.html.clean import Cleaner
+import requests
 
-from .models import Book
+# Django imports
+from django.shortcuts import get_object_or_404, render, redirect, reverse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.http import HttpResponse, JsonResponse
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+
+# User defined module imports
+from .models import Book, UserProfile, Rating
 from .modules.epubtotext import convert, __get_extension__, __get_file_name__
 from .modules.epubnlp import get_nlp_features
 
 
+nlp = None
+
+
 def home(req):
-    # return HttpResponse('home sweet home <br> <a href="upload-book">'
-    # 'Upload here </a>')
-    return render(req, 'home.html', {})
+	return render(req, 'home.html', {})
 
 
 def get_books(req):
@@ -41,73 +43,121 @@ def get_books(req):
 
 
 def upload_book(req):
-    if req.method == 'GET':
-        return render(req, 'uploadform.html', {})
-    elif req.method == 'POST':
-        f = req.FILES['book']
-        fname = f.name
-        media_path = os.path.join(os.getcwd(), 'bookstoreapp', 'media')
-        with open(os.path.join(media_path, 'books', fname), 'wb+') as destination:
-            for chunk in f.chunks():
-                destination.write(chunk)
+	global nlp
 
-        p = os.path.join(media_path, 'books', fname)
-        pro = os.path.dirname(convert(p, output_file=os.path.join(media_path,
-                                                                  'processed',
-                                                                  __get_file_name__(fname),
-                                                                  __get_file_name__(fname) +
-                                                                  '.txt')))
+	if req.method == 'GET':
+		return render(req, 'uploadform.html', {})
 
-        with open(os.path.join(pro, 'meta.pkl'), 'rb') as metaf:
-            meta = pickle.load(metaf)
+	elif req.method == 'POST':
+		# Load spacy and NLP model
+		print('Loading Spacy')
+		import spacy
+		if nlp == None:
+			nlp = spacy.load('en')
+		print('Done loading Spacy')
 
-        img = None
-        if not meta['cover'] == None:
-            iname = 'photos' + '/' + \
-                    '{0}-{1}{2}'.format(fname,
-                                        int(time.time()),
-                                        __get_extension__(meta['cover']))
-
-            img = os.path.join(media_path, iname)
-            im = Image.open(os.path.join(pro, meta['cover']))
-            im.thumbnail((350, 350))
-            im.save(img)
-
-        else:
-            iname = os.path.join('photos', 'placeholder.png')
-
-        if meta['pub_date'] == '':
-            pub_date = None
-        else:
-            pub_date = date_parser.parse(meta['pub_date'])
-            print(meta['pub_date'])
-
-        print('Creating NLP features')
-        verbs, ners = get_nlp_features(pro, nlp)
-        print('Done with NLP features')
-        print(verbs, ners)
-
-        book = Book(
-            title=meta['title'],
-            author=meta['author'],
-            description=meta['description'],
-            language=meta['language'],
-            pub_date=pub_date,
-            publication=meta['publication'],
-            genre=meta['subjects'],
-            image_link=(settings.MEDIA_URL + iname),
-            graph_data=json.dumps(verbs),
-            ners=json.dumps(ners.most_common(20)),
-            epub_link=(settings.MEDIA_URL + os.path.join('books', fname)),
-        )
-
-        book.save()
-        return redirect(home)
+		# Read uploaded file and save to disk
+		f = req.FILES['book']
+		fname = f.name
+		media_path = os.path.join(os.getcwd(), 'bookstoreapp', 'media') 
+		with open(os.path.join(media_path, 'books', fname), 'wb+') as destination:
+			for chunk in f.chunks():
+				destination.write(chunk)
 
 
-def view_book(req, book_id):
+		# Convert EPUB file to folder with raw text
+		p = os.path.join(media_path, 'books', fname)
+		pro = os.path.dirname(convert(p, output_file=os.path.join(media_path, 
+													'processed' , 
+													__get_file_name__(fname), 
+													__get_file_name__(fname) +
+													'.txt')))
+		
+
+		# Get meta dict for extracted EPUB
+		with open(os.path.join(pro, 'meta.pkl'), 'rb') as metaf:
+			meta = pickle.load(metaf)
+
+		# Extract cover image and save in thumbnail resolution
+		img = None
+		if not meta['cover'] == None:
+			iname = 'photos' + '/' +\
+							'{0}-{1}{2}'.format(fname, 
+											int(time.time()),
+											__get_extension__(meta['cover']))
+
+			img = os.path.join(media_path, iname)
+			im = Image.open(os.path.join(pro, meta['cover']))
+			im.thumbnail((350, 350))
+			im.save(img)
+
+		else:
+			iname = os.path.join('photos', 'placeholder.png')
+
+
+		# Set Publisher date
+		if meta['pub_date'] == '':
+			pub_date = None
+		else:
+			pub_date = date_parser.parse(meta['pub_date'])
+			print(meta['pub_date'])
+
+
+		# Get number of verbs per chapter, NERs
+		print('Creating NLP features')
+		verbs, ners = get_nlp_features(pro, nlp)
+		print('Done with NLP features')
+		print(verbs, ners)
+
+
+		# Save to DB
+		book = Book(
+					title=meta['title'],
+					author=meta['author'],
+					description=meta['description'],
+					language=meta['language'],
+					pub_date=pub_date,
+					publication=meta['publication'],
+					genre=meta['subjects'],
+					image_link=(settings.MEDIA_URL + iname),
+					graph_data=json.dumps(verbs),
+					ners=json.dumps(ners.most_common(20)),
+					epub_link=(settings.MEDIA_URL + os.path.join('books', fname)),
+				)
+
+		book.save()
+		return redirect(home)
+
+def get_author_description(author):
+	url = ('https://en.wikipedia.org/w/api.php?format=xml&action=query&'
+		   'prop=extracts%7Cpageimages&exintro=&explaintext=&'
+		   'titles=' + author + '&redirects=1&piprop=original')
+
+	r = requests.get(url)
+
+	desc = ''
+	author_photo = ''
+
+	if r.status_code == 200:
+		root = etree.fromstring(r.content)
+		desc = root.find('.//extract').text
+		author_photo = root.find('.//original').attrib['source']
+
+	return desc, author_photo
+
+
+def view_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
+    if request.user.is_authenticated():
+    	rating_set = Rating.objects.filter(book=book, user=request.user)
+    	if len(rating_set) > 0:
+    		rating = rating_set[0].rating
+    	else:
+    		rating = 0
+    else:
+    	rating = 0
     bdict = book.to_dict()
+    bdict['user_rating'] = rating
     return JsonResponse(bdict)
 
 
@@ -117,38 +167,96 @@ def view_book_html(req, book_id, book_slug):
         'book_name': ' '.join(book_slug.split('-')).title()
     })
 
+@csrf_exempt
+def update_ratings(request):
+	if request.method == 'POST':
+		new_rating = int(request.POST['rating'])
+		book_id = request.POST['book_id']
+		book = Book.objects.get(id=book_id)
+		rating_set = Rating.objects.filter(book=book, user=request.user)
+		if len(rating_set) > 0:
+			rating = rating_set[0]
+			book_rating = book.update_ratings(new_rating, rating.rating)
+			rating.rating = new_rating
+			rating.save()
+			
+		else:
+			rating = Rating(book=book, user=request.user, rating=new_rating)
+			book_rating = book.update_ratings(new_rating)
+			rating.save()
 
-def login(request):
-    return render(request, 'login.html', {})
+		return JsonResponse({
+				'success': True,
+				'data': {
+					'book_rating': book_rating 
+				}
+			})
+	else:
+		return JsonResponse({
+				'success': False
+			})
+
 
 def contact(request):
     return render(request, 'contact.html', {})
 
-def signup(request):
-    return render(request, 'signup.html', {})
 
 def about(request):
     return render(request, 'about.html', {})
 
 
-def get_name(request):
+def signup(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated():
+            return redirect(home)
+        else:
+            return render(request, 'signup.html', {})
+    
+    elif request.method == 'POST':
+        username = request.POST['name']
+        password = request.POST['pass']
+        roll_no = request.POST['roll']
+        email = request.POST['email']
 
-    if request.method=='POST':
-        form=NameForm(request.post)
-        if form.is_valid():
-            return HttpResponse('<h2>SignUP successful!!!</h2>')
+        user = User.objects.create_user(username=roll_no,
+                                         email=email,
+                                         password=password)
+        user.save()
+
+        userProfile = UserProfile(
+                        user=user,
+                        name=username
+                      )
+
+        userProfile.save()
+
+        return redirect(reverse('login'))
+
+
+def signin(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated():
+            return redirect(home)
 
         else:
-            form=NameForm()
+            return render(request, 'login.html', {})
 
-            return render(request,'signup.html',{'form':form})
+    elif request.method == 'POST':
+        username = request.POST['name']
+        password = request.POST['pass']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect(reverse('home'))
+
+        else:
+            print ("Invalid login details: {0}, {1}".format(username, password))
+            return redirect(reverse('login'))
+
+        return redirect(reverse('home'))
 
 
-
-
-
-
-
-
-
-
+def signout(request):
+    if request.user.is_authenticated():
+        logout(request)
+        return redirect(reverse('home'))

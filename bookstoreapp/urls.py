@@ -7,8 +7,10 @@ urlpatterns = [
     url(r'^get-all-books/$', views.get_books, name='get-all'),
     url(r'^upload-book/$', views.upload_book, name='upload-book'),
     url(r'^$', views.home, name='home'),
-    url(r'^login/$', views.login, name='login'),
+    url(r'^login/$', views.signin, name='login'),
     url(r'^contact/$', views.contact, name='contact'),
     url(r'^signup/$', views.signup, name='signup'),
     url(r'^about/$', views.about, name='about'),
+    url(r'^logout/$', views.signout, name='logout'),
+    url(r'^update-ratings/$', views.update_ratings, name='update-ratings')
 ]
