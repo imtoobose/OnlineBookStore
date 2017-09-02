@@ -1,28 +1,32 @@
-from django.shortcuts import get_object_or_404, render, redirect, reverse
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
-from django.http import HttpResponse, JsonResponse
-from django.conf import settings
-
-print('Loading Spacy')
-import spacy
-nlp = spacy.load('en')
-print('Done loading Spacy')
-
+# Python imports
 import os
 import pickle
 import time
 from dateutil import parser as date_parser
 import json
 from PIL import Image
+from lxml import etree
+from lxml.html.clean import Cleaner
+import requests
 
+# Django imports
+from django.shortcuts import get_object_or_404, render, redirect, reverse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.http import HttpResponse, JsonResponse
+from django.conf import settings
+
+# User defined module imports
 from .models import Book
 from .modules.epubtotext import convert, __get_extension__, __get_file_name__
 from .modules.epubnlp import get_nlp_features
 
+
+# Global Variables
+nlp = None
+
+
 def home(req):
-	# return HttpResponse('home sweet home <br> <a href="upload-book">'
-						# 'Upload here </a>')
 	return render(req, 'home.html', {})
 
 
@@ -38,9 +42,20 @@ def get_books(req):
 
 
 def upload_book(req):
+	global nlp
+
 	if req.method == 'GET':
 		return render(req, 'uploadform.html', {})
+
 	elif req.method == 'POST':
+		# Load spacy and NLP model
+		print('Loading Spacy')
+		import spacy
+		if nlp == None:
+			nlp = spacy.load('en')
+		print('Done loading Spacy')
+
+		# Read uploaded file and save to disk
 		f = req.FILES['book']
 		fname = f.name
 		media_path = os.path.join(os.getcwd(), 'bookstoreapp', 'media') 
@@ -48,6 +63,8 @@ def upload_book(req):
 			for chunk in f.chunks():
 				destination.write(chunk)
 
+
+		# Convert EPUB file to folder with raw text
 		p = os.path.join(media_path, 'books', fname)
 		pro = os.path.dirname(convert(p, output_file=os.path.join(media_path, 
 													'processed' , 
@@ -55,9 +72,12 @@ def upload_book(req):
 													__get_file_name__(fname) +
 													'.txt')))
 		
+
+		# Get meta dict for extracted EPUB
 		with open(os.path.join(pro, 'meta.pkl'), 'rb') as metaf:
 			meta = pickle.load(metaf)
 
+		# Extract cover image and save in thumbnail resolution
 		img = None
 		if not meta['cover'] == None:
 			iname = 'photos' + '/' +\
@@ -73,17 +93,23 @@ def upload_book(req):
 		else:
 			iname = os.path.join('photos', 'placeholder.png')
 
+
+		# Set Publisher date
 		if meta['pub_date'] == '':
 			pub_date = None
 		else:
 			pub_date = date_parser.parse(meta['pub_date'])
 			print(meta['pub_date'])
 
+
+		# Get number of verbs per chapter, NERs
 		print('Creating NLP features')
 		verbs, ners = get_nlp_features(pro, nlp)
 		print('Done with NLP features')
 		print(verbs, ners)
 
+
+		# Save to DB
 		book = Book(
 					title=meta['title'],
 					author=meta['author'],
@@ -101,6 +127,22 @@ def upload_book(req):
 		book.save()
 		return redirect(home)
 
+def get_author_description(author):
+	url = ('https://en.wikipedia.org/w/api.php?format=xml&action=query&'
+		   'prop=extracts%7Cpageimages&exintro=&explaintext=&'
+		   'titles=' + author + '&redirects=1&piprop=original')
+
+	r = requests.get(url)
+
+	desc = ''
+	author_photo = ''
+
+	if r.status_code == 200:
+		root = etree.fromstring(r.content)
+		desc = root.find('.//extract').text
+		author_photo = root.find('.//original').attrib['source']
+
+	return desc, author_photo
 
 def view_book(req, book_id):
 	book = get_object_or_404(Book, pk=book_id)

@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.shortcuts import reverse
@@ -36,7 +37,10 @@ class Book(models.Model):
     slug = models.SlugField(max_length=100, editable=False, default='unnamed-book')
     graph_data = models.TextField(default=None, null=True, blank=True)
     ners = models.TextField(default=None, null=True, blank=True)
+    rating = models.FloatField(default=0.0, null=True, blank=True)
+    num_ratings = models.IntegerField(default=0, null=True, blank=True)
     epub_link = models.CharField(default=None, max_length=1000, null=True, blank=True)
+    folder_link = models.CharField(default=None, max_length=1000, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title[:75]
@@ -53,3 +57,21 @@ class Book(models.Model):
 
     def to_dict(self):
         return __convert_to_dict__(self)
+
+    def update_ratings(self, rating):
+        self.rating = (self.rating * self.num_ratings + rating)/(self.num_ratings + 1)
+        self.num_ratings += 1
+        super(Book, self).save()
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+
+class Rating(models.Model):
+    rating = models.FloatField(default=0.0, null=True, blank=True)
+    user = models.ForeignKey(UserProfile, null=True, blank=True, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, null=True, blank=True, on_delete=models.CASCADE)
