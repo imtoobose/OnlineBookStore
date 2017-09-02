@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
@@ -53,3 +52,9 @@ class Book(models.Model):
 
     def to_dict(self):
         return __convert_to_dict__(self)
+
+class NameForm(models.Model):
+    name=models.CharField(max_length=100)
+    rollnumber = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    Password= models.CharField(max_length=100)
