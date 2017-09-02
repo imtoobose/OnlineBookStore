@@ -195,8 +195,7 @@ def update_ratings(request):
 		return JsonResponse({
 				'success': False
 			})
-
-
+		
 def contact(request):
     return render(request, 'contact.html', {})
 
