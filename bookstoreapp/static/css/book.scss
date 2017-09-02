@@ -1,0 +1,69 @@
+@import '_variables';
+@import 'common';
+
+body * {
+	z-index: 2;
+}
+
+.book-card{
+	min-height: 200px;
+	background: $mdc-theme-background;
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	
+	.mdc-card__primary{
+		background: #FFF;
+	}
+}
+
+.description-card{
+	background: $mdc-theme-background;
+	justify-content: flex-start;
+	
+	.book-description{
+		height: 150px;
+		overflow-y: auto;
+	}
+}
+
+.author-card{
+	justify-content: flex-start;
+
+	.author-header{
+		@include paddingLeft(5px, 30px);
+
+	}
+
+	.author-img{
+		background-size: cover;
+		height: 150px;
+		width: 120px;
+		background-repeat: no-repeat;
+		background-position: center;
+		margin-left: 5%;
+
+		@include paddingLeft(10px, 50px);
+	}
+
+	.author-desc{
+		max-height: 250px;
+		overflow-y: auto;
+	}
+}
+
+.background_cover{
+	background: $mdc-theme-accent;
+	content: '';
+	height: $background-cover-size;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1;
+}
+
+.chapter-graph-grid{
+	padding-top: 0px;
+	margin-top: 3px;
+}

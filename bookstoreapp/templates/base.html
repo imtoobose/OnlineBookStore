@@ -1,12 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html class="mdc-typography">
 	<head>
+		<link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
+		<link rel="stylesheet"
+          href="{% static 'node_modules/material-components-web/dist/material-components-web.css' %}">
+        <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 			{% block head %} {% endblock %}
 			{% block title %} {% endblock %}
+
 	</head>
 	<body>
-		{% block content %} {% endblock %}
+		{% block header %}
+		{% endblock %}
+
+		<main class="mdc-toolbar-fixed-adjust">
+			<aside class="mdc-temporary-drawer mdc-typography">
+			  <nav class="mdc-temporary-drawer__drawer">
+
+			    <header class="mdc-temporary-drawer__header"
+			    	style='background: url("{% static 'images/abstract.png'%}"); background-position: center; background-size:cover; background-repeat: no-repeat; min-height:250px;'>
+			      <div class="mdc-temporary-drawer__header-content"
+			      	   >
+			        Header content goes here
+			      </div>
+			    </header>
+
+			    <nav id="icon-with-text-demo" class="mdc-temporary-drawer__content mdc-list">
+			      <a class="mdc-list-item mdc-temporary-drawer--selected" href="#">
+			        <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">inbox</i>Inbox
+			      </a>
+			      <a class="mdc-list-item" href="#">
+			        <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">star</i>Star
+			      </a>
+			    </nav>
+			  </nav>
+			</aside>
+			{% block content %}
+			{% endblock %}
+		</main>
 	</body>
 	<script src="{% static 'js/qwest.min.js' %}"></script>
-	{% block scripts %} {% endblock %}
+	<script src="{% static 'node_modules/material-components-web/dist/material-components-web.js' %}"></script>
+	<script>mdc.autoInit()</script>
+	{% block scripts %}
+	{% endblock %}
+	<script>
+		var toolbar = mdc.toolbar.MDCToolbar.attachTo(document.querySelector('.mdc-toolbar'));
+	  	toolbar.fixedAdjustElement = document.querySelector('.mdc-toolbar-fixed-adjust');
+
+	  	let drawer = new mdc.drawer.MDCTemporaryDrawer(document.querySelector('.mdc-temporary-drawer'));
+	  	
+	  	document.getElementById('toolbar-hamburger').addEventListener('click', () => {
+	  		if(drawer.open)
+	  		drawer.open = false
+	  		else
+	  			drawer.open = true
+	  	});
+	</script>
 </html>

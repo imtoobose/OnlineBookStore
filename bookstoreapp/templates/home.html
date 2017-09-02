@@ -1,19 +1,68 @@
 {% extends "base.html" %}
 {% load compress %}
 {% block head %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/swiper.min.css' %}">
 	{% compress css %}
-		    	<link rel="stylesheet" type="text/x-scss" href="{% static 'css/home.scss' %}" />
+	<link rel="stylesheet" type="text/x-scss" href="{% static 'css/home.scss' %}" />
 	{% endcompress %}
-	<title> Online Book Store </title>
+	<title> OnLib | Home</title>
+{% endblock %}
+
+{% block header %}
+	{% include "header.html" %}
 {% endblock %}
 
 {% block content %}
-	<div id="photos" class="photos"></div>
+	<br>
+
+	<!-- Home Page Carousel -->
+	<div class="carousel">
+		<h1 class="content-title"> Featured Books </h1>
+		<h3 class="content-subtitle"> The Best Of Our Catalog </h3>
+		<div class="swiper-container">
+		    <div id="swiper-wrapper" class="swiper-wrapper"></div>
+		    <div id="swiper-button-prev" class="swiper-button-prev">
+		    	<i style="pointer-events:none" class="swiper-button fa fa-angle-left"></i>
+		    </div>
+		    <div id="swiper-button-next" class="swiper-button-next">
+		    	<i style="pointer-events:none" class="swiper-button fa fa-angle-right"></i>
+		    </div>
+		</div>
+	</div>
+	<!-- End of Carousel -->
+
+	<br>
+	<br>
+
+	<!-- Home Page Grid -->
+	<div class="mdc-layout-grid photo-grid">
+		<h1 class="content-title"> Catalog </h3>
+		<h3 class="content-subtitle"> Every book available </h3>
+		<div id="photos" class="photos mdc-layout-grid__inner"></div>
+	</div>
+	<!-- End of Grid -->
+
+	<!-- Background on top of home page -->
+	<div class="background_cover">
+	</div>
+	<!-- End Background -->
+
+	<!-- Upload FAB -->
 	<a href="upload-book">
-		<button class="md-button"> Upload </button>
+		<button class="mdc-fab material-icons app-fab--absolute" aria-label="Favorite">
+	  		<span class="fa fa-upload">
+	  		</span>
+		</button>
 	</a>
+	<!-- End FAB -->
+
+	<br>
+	<br>
+	<br>
+	
 {% endblock %}
 
 {% block scripts %}
+	<script src="{% static 'js/swiper.min.js' %}"></script>
 	<script src="{% static 'js/home.js' %}"> </script>
 {% endblock %}

@@ -1,26 +1,108 @@
 @import '_variables';
-body{
-	background: $background;
+@import 'common';
+
+body * {
+	position: relative;
+	z-index: 2;
 }
 
-.md-button{
-	border: none;
-	background: #6D9DC5;
-	outline: none;
-	color: #FFF;
-	height: 70px;
-	width: 200px;
-	font-size: 1.4em;
-	cursor: pointer;
+.background_cover{
+	height: 280px;
+	width: 100%;
+	background: $mdc-theme-accent;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
 }
 
-.photos{
-	img{
-		margin: 15px;
-		box-shadow: 2px 2px 6px #777;
-		transition: transform 0.2s ease;
-		&:hover{
-			transform: scale(1.05);
+.photo-grid{
+	padding-left: 13%;
+	padding-right: 9%;
+	margin: 0 auto;
+}
+
+.home-tool{
+	background: $mdc-theme-accent;
+}
+
+.home-card{
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin-bottom: 15px;
+	text-decoration: none;
+
+	.mdc-card__primary{
+		background: #FFF;
+		padding: 10px;
+		&:last-child{
+			padding-bottom: 10px;
 		}
 	}
+
+	.mdc-card__title--large{
+		font-size: 0.8rem;
+		line-height: 1rem;
+		background:#FFF;
+	}
+
+	.mdc-card__subtitle{
+		font-size: 0.7rem;
+		line-height: 1rem;
+	}
+
+	&.regular-card{
+		max-width: 150px;
+		min-height: 250px;
+	}
+}
+
+.app-fab--absolute{
+	position: fixed;
+	bottom: 1rem;
+	right: 1rem;
+
+}
+
+.swiper-container{
+	z-index: 2 !important;
+	background: none;
+	height: 250px;
+	position: relative;
+	padding-bottom: 10px;
+}
+
+.carousel{
+	.content-title, .content-subtitle{
+		color: #EEE;
+		@include paddingLeft(10%, 100px);
+	}
+}
+
+.swiper-button-prev, .swiper-button-next{
+	background: $mdc-theme-background;
+	border-radius: 50%;
+	height: 40px;
+	width: 40px;
+	opacity: 0.8;
+	transition: opacity 0.2s ease;
+
+	.swiper-button{
+		@include centerAbsolute;
+		font-size: 20px;
+	}
+
+	&.swiper-button-disabled{
+		opacity: 0;	
+		pointer-events: auto;
+	}
+}
+
+
+@media(min-width: 1024px) {
+   .app-fab--absolute{
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
 }

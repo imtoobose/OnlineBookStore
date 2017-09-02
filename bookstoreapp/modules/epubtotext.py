@@ -122,11 +122,23 @@ def convert(input_file, output_file='book.txt', extract_chapters=True, make_meta
 		toc_file = None
 
 	cover_file_path = None
+	cover_name = None
+
+	meta_tags = metadata.findall('meta', ns)
+
+	for m in meta_tags:
+		if 'cover' in m.attrib['name']:
+			cover_name = m.attrib['content']
+			break
+
 	for i in manifest:
 		if i.attrib['media-type'] == 'application/xhtml+xml':
 			text_file_paths.append(os.path.join(content_dir, i.attrib['href'] ) )
-		elif i.attrib['media-type'] == 'image/jpeg' or i.attrib['media-type'] == 'image/png':
-			if 'cover' in i.attrib['id']: 
+		elif ((not cover_name == None) 
+			and i.attrib['media-type'].lower() == 'image/jpeg' 
+			or i.attrib['media-type'].lower() == 'image/png'):
+
+			if i.attrib['id'] == cover_name or 'cover' in i.attrib['id']: 
 				cover_file_path = i.attrib['href']
 				with open(os.path.join(content_dir, cover_file_path), 'rb') as cover_file:
 					writer = open(os.path.join(processed_files_path, 'cover' + __get_extension__(cover_file_path)), 'wb+')

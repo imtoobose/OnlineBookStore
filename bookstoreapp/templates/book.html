@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load compress %}
+{% block head  %}
+	<title> Onlib | {{book_name}} </title>
+	{% compress css %}
+		<link rel="stylesheet" type="text/x-scss" href="{% static 'css/book.scss' %}" />
+	{% endcompress %}
+{% endblock %}
+{% block header %}
+	{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
+	<input type="hidden" id="get-id" value="{{id}}"/>
+	<br>
+	<br>
+	<div class="mdc-layout-grid">
+		<div class="mdc-layout-grid__inner">
+			<section id="book-card" class="book-card mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
+			</section>
+
+			<section class="description-card mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-10">
+					<div class="mdc-card__primary">
+						<h1 id="book-title" class="mdc-card__title mdc-card__title--large">
+						</h1>
+						<h2 id="book-author" class="mdc-card__subtitle"></h2>
+						<hr>
+					</div>
+					
+					<section id="book-description" class="book-description mdc-card__supporting-text">
+    				</section>
+
+    				<section id="book-actions" class="mdc-card__actions">
+    					<button class="mdc-button mdc-button--compact mdc-button--raised mdc-button--accent mdc-card__action">Buy Now</button>
+    				</section>
+				<!-- </div> -->
+			</section>
+		</div>
+	</div>
+
+	<div class="mdc-layout-grid chapter-graph-grid">
+		<div class="mdc-layout-grid__inner">
+			<section class="mdc-layout-grid__cell--span-2">
+			</section>
+
+			<section class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8">
+				<div id="graph-card">
+					<canvas id="chapter-graph"></canvas>
+				</div>
+			</section>
+
+			<section class="mdc-layout-grid__cell--span-2">
+			</section>
+		</div>
+	</div>
+
+	<div class="background_cover">
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'node_modules/chart.js/dist/Chart.min.js' %}"></script>
+	<script src="{% static 'js/book.js' %}"></script>
+{% endblock %}

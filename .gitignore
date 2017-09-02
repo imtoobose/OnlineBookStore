@@ -14,7 +14,7 @@ db.sqlite3
 env/
 build/
 develop-eggs/
-dist/
+# dist/
 downloads/
 eggs/
 .eggs/

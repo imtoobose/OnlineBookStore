@@ -1,0 +1,53 @@
+/* Mixins */
+@mixin paddingLeft($per, $minw){
+	&:before{
+		content: '';
+		display: inline-block;
+		position:relative;
+		width: $per;
+		max-width: $minw;
+		height: 10px;
+		font-size: 1.2rem;
+	}
+}
+
+@mixin centerAbsolute{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+/* End mixins */
+
+body, html{
+	background: $mdc-theme-background;
+	padding: 0px;
+	margin: 0px;
+	position: relative;
+}
+
+
+.mdc-toolbar__title{
+	font-size: 1.2rem;
+	font-weight: 700;
+	letter-spacing: 200;
+}
+
+.home-tool{
+	background: $mdc-theme-accent;
+}
+
+.content-title{
+	color: #000;
+	font-weight: 700;
+	font-size: $content-title-font-size;
+	// padding-bottom: 0px;
+	margin-bottom: 0px;
+}
+
+.content-subtitle{
+	color: #000;
+	font-weight: 400;
+	font-size: $content-subtitle-font-size;
+	margin-top: 5px;
+}

@@ -1,0 +1,30 @@
+<html>
+<head>
+      <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
+      <link rel="stylesheet"
+            href="{% static 'node_modules/material-components-web/dist/material-components-web.css' %}">
+          <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+
+<div>Toolbar goes here</div>
+
+<div class="content">
+  <nav class="mdc-permanent-drawer mdc-typography">
+    <nav id="icon-with-text-demo" class="mdc-list">
+      <a class="mdc-list-item mdc-permanent-drawer--selected" href="#">
+        <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">inbox</i>Inbox
+      </a>
+      <a class="mdc-list-item" href="#">
+        <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">star</i>Star
+      </a>
+    </nav>
+  </nav>
+  <main>
+    Page content goes here.
+  </main>
+</div>
+
+</body>
