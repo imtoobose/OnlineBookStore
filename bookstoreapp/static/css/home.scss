@@ -9,7 +9,7 @@ body * {
 .background_cover{
 	height: 280px;
 	width: 100%;
-	background: $mdc-theme-accent;
+	background: $mdc-theme-primary;
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -23,7 +23,7 @@ body * {
 }
 
 .home-tool{
-	background: $mdc-theme-accent;
+	background: $mdc-theme-primary;
 }
 
 .home-card{
@@ -98,7 +98,6 @@ body * {
 		pointer-events: auto;
 	}
 }
-
 
 @media(min-width: 1024px) {
    .app-fab--absolute{

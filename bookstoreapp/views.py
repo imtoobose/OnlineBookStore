@@ -18,6 +18,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Count
+from django.core.paginator import Paginator, EmptyPage
 
 # User defined module imports
 from .models import Book, UserProfile, Rating, Genre
@@ -33,22 +34,22 @@ def home(req):
 
 
 def get_books(req):
-    books = Book.objects.all().order_by('-avg_rating')[:10]
-    new_books = Book.objects.all().order_by('created_at')[:10]
+    books = Book.objects.all().order_by('-avg_rating')[:32]
+    new_books = Book.objects.all().order_by('-created_at')[:12]
     send_data = {'data': [], 'new_books': []}
 
     for book in books:
         bdict = book.to_dict()
-        bdict['url'] = book.get_url()
+        # bdict['url'] = book.get_url()
         send_data['data'].append(bdict)
 
     for book in new_books:
     	bdict = book.to_dict()
-    	bdict['url'] = book.get_url()
+    	# bdict['url'] = book.get_url()
     	send_data['new_books'].append(bdict)
 
     genres = Genre.objects.annotate(num_books=Count('book'))\
-    						.order_by('-num_books')[:30]
+    						.order_by('-num_books')[:36]
     
     send_data['genre_books'] = list()
     g_count = 0
@@ -58,12 +59,12 @@ def get_books(req):
     	b_count = 0
     	book_list = list()
 
-    	for i in g.book_set.all().order_by('-avg_rating')[:30]:
+    	for i in g.book_set.all().order_by('-avg_rating')[:36]:
     		if not i in added_books:
     			added_books[i] = True
     			b_count += 1
     			i_dic = i.to_dict()
-    			i_dic['url'] = i.get_url()
+    			# i_dic['url'] = i.get_url()
     			book_list.append(i.to_dict())
     			b_count += 1
 
@@ -81,6 +82,33 @@ def get_books(req):
 	    		break
 
     return JsonResponse(send_data)
+
+
+def view_book_genre(req, genre):
+	return render(req, 'genre.html', {'genre': genre})
+
+
+def get_book_genre(req, genre, page):
+	if genre == 'all':
+		books = Book.objects.all().order_by('-avg_rating')
+	else:
+		books = get_object_or_404(Genre, genre=genre).book_set.order_by('-avg_rating')
+
+	print('PAGE', page)
+	try:
+		p = Paginator(books, 18).page(page)
+
+	except EmptyPage:
+		return JsonResponse({
+			'success': 'false',
+			'error': 'EmptyPage'
+			})
+
+	data = [b.to_dict() for b in p]
+	return JsonResponse({
+		'success': 'true',
+		'data': data
+		})
 
 
 def upload_book(req):
@@ -108,12 +136,13 @@ def upload_book(req):
 
 		# Convert EPUB file to folder with raw text
 		p = os.path.join(media_path, 'books', fname)
-		pro, extract_path = os.path.dirname(convert(p, output_file=os.path.join(media_path, 
+		pro, extract_path = convert(p, output_file=os.path.join(media_path, 
 													'processed' , 
 													__get_file_name__(fname), 
 													__get_file_name__(fname) +
-													'.txt')))
+													'.txt'))
 		
+		pro = os.path.dirname(pro)
 
 		# Get meta dict for extracted EPUB
 		with open(os.path.join(pro, 'meta.pkl'), 'rb') as metaf:
@@ -148,8 +177,7 @@ def upload_book(req):
 		print('Creating NLP features')
 		verbs, ners = get_nlp_features(pro, nlp)
 		print('Done with NLP features')
-		print(verbs, ners)
-
+		print(verbs, ners)	
 
 		# Save to DB
 		book = Book(
@@ -168,6 +196,11 @@ def upload_book(req):
 				)
 
 		book.save()
+		genres = meta['subjects'].lower().split(',')
+		for g in genres:
+			g_obj = Genre.objects.get_or_create(genre=g)[0]
+			book.genres.add(g_obj)
+	
 		return redirect(home)
 
 def get_author_description(author):

@@ -119,7 +119,8 @@ def convert(input_file, output_file='book.txt', extract_chapters=True, make_meta
 
 	text_file_paths = []
 
-	search_toc = glob.glob(os.path.join(__get_parent_dir__(input_dir), 'extracts','**/*.ncx'), recursive=True)
+	search_toc = glob.glob(os.path.join(__get_parent_dir__(input_dir), 'extracts', i_file_name, '**/*.ncx'), recursive=True)
+	print("SEARCH TOC", search_toc, input_dir)
 
 	if len(search_toc) > 0:
 		toc_file = search_toc[0]
@@ -233,16 +234,20 @@ def convert(input_file, output_file='book.txt', extract_chapters=True, make_meta
 					})
 
 					lastfile = os.path.join(chapter_folder, play_order + '-' + chapter_title + '.txt')
-					hh = chapsoup.body.find(id=contentid)
-					content = ''
-					for i in hh.next_siblings:
-						if i in headers:
-							break
-						else:
-							try:
-								content += i.text + ' '
-							except:
-								continue
+					if chapsoup.body.get('id') == contentid:
+						content += chapsoup.body.text 
+					else:
+						hh = chapsoup.body.find(id=contentid)
+
+						content = ''
+						for i in hh.next_siblings:
+							if i in headers:
+								break
+							else:
+								try:
+									content += i.text + ' '
+								except:
+									continue
 
 					with open(lastfile, 'w+') as afile:
 						afile.write(content)

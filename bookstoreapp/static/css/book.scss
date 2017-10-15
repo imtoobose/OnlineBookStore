@@ -53,7 +53,7 @@ body * {
 }
 
 .background_cover{
-	background: $mdc-theme-accent;
+	background: $mdc-theme-primary;
 	content: '';
 	height: $background-cover-size;
 	position: absolute;
@@ -92,7 +92,7 @@ body * {
 }
 
 .rating-star-active{
-	color: $mdc-theme-accent;
+	color: $mdc-theme-primary;
 }
 
 .rating-star-inactive{

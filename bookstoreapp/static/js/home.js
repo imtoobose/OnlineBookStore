@@ -96,9 +96,11 @@ function add_elements(arr, narr){
 		
 		slidewrap.appendChild(card[1])
 
-		book = narr[i]
-		card = createCard(book['image_link'], book['author'], book['title'], book['url'])
-		photos.appendChild(card[0])
+		if(i < narr.length){
+			book = narr[i]
+			card = createCard(book['image_link'], book['author'], book['title'], book['url'])
+			photos.appendChild(card[0])
+		}
 	}
 	
 	initlializeSlider()
@@ -109,17 +111,20 @@ function createGrid(g){
 	div = document.createElement('div')
 	h1 = document.createElement('h1')
 	h3 = document.createElement('h3')
+	a = document.createElement('a')
 	photos = document.createElement('div')
 
 	div.classList.add('mdc-layout-grid')
 	div.classList.add('photo-grid')
+	a.href = '/genre/' + g.genre + '/'
 	h1.classList.add('content-title')
 	h3.classList.add('content-subtitle')
 	photos.classList.add('photos')
 	photos.classList.add('mdc-layout-grid__inner')
 	h1.innerText = toTitleCase(g.genre)
 	h3.innerText = ''
-	div.appendChild(h1)
+	a.appendChild(h1)
+	div.appendChild(a)
 	div.appendChild(h3)
 	div.appendChild(photos)
 	var book, card, bookarr = g.books
@@ -134,21 +139,17 @@ function createGrid(g){
 }
 
 function add_genres(arr){
-	console.log('here')
 	var genres = document.getElementById('genres')
 	var g_len = arr.length
-	console.log('here', g_len)
 	for(var i = 0; i<g_len; i++){
 		g = arr[i]
 		grid = createGrid(g)
-		console.log(grid)
 		genres.appendChild(grid)
 	}
 }
 
 qwest.get('/get-all-books/')
 	.then(function(xhr, res){
-		console.log(res)
 		add_elements(res.data, res.new_books)
 		add_genres(res.genre_books)
 })

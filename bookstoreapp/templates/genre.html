@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load compress %}
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/swiper.min.css' %}">
+	{% compress css %}
+	<link rel="stylesheet" type="text/x-scss" href="{% static 'css/home.scss' %}" />
+	{% endcompress %}
+	<title> OnLib | Home</title>
+{% endblock %}
+
+{% block header %}
+	{% include "header.html" %}
+	<div id="progressbar" role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-theme--accent" style="height:8px; position: fixed; top: 64px; z-index:1000">
+	  <div class="mdc-linear-progress__buffering-dots mdc-theme--accent"></div>
+	  <div class="mdc-linear-progress__buffer mdc-theme--accent"></div>
+	  <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar mdc-theme--accent">
+	    <span class="mdc-linear-progress__bar-inner"></span>
+	  </div>
+	  <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar mdc-theme--accent">
+	    <span class="mdc-linear-progress__bar-inner mdc-theme--accent"></span>
+	  </div>
+	</div>	
+	<br>
+{% endblock %}
+
+{% block content %}
+
+	<!-- Home Page Carousel -->
+	<input id="genre-value" type="hidden" value="{{genre}}"/>
+
+	<!-- Home Page Grid -->
+	<div class="mdc-layout-grid photo-grid">
+		<h1 class="content-title"> Catalog </h3>
+		<h3 class="content-subtitle"> {{genre|title}} Books </h3>
+		<div id="photos" class="photos mdc-layout-grid__inner"></div>
+	</div>
+	
+	
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'js/swiper.min.js' %}"></script>
+	<script src="{% static 'js/commongrid.js' %}"></script>
+	<script src="{% static 'js/genre.js' %}"> </script>
+{% endblock %}
