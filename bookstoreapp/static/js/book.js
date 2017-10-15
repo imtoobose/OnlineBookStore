@@ -1,5 +1,5 @@
 var book_id = document.getElementById('get-id').value
-var user_rating = 0, book_rating = 0
+var user_rating = 0, book_rating = 0, user_review = ''
 
 function loadImage(src){
 	var bookcard = document.getElementById('book-card')
@@ -93,7 +93,8 @@ function setRatingListener(){
 		var id = Number(this.id.split('-')[0])
 		qwest.post('/update-ratings/', {
 			rating: id,
-			book_id: book_id
+			book_id: book_id,
+			text: user_review,
 		})
 		.then(function(xhr, response){
 			user_rating = id
@@ -109,7 +110,7 @@ function setRatingListener(){
 	})
 }
 
-function updateRatings(rating){
+function updateRatings(rating, review){
 	var i = 1, ur = Math.floor(rating)
 	for(; i <= 5; i ++){
 		if(i<=ur) {
@@ -123,6 +124,9 @@ function updateRatings(rating){
 			.removeClass('rating-star-active')
 		}
 	}
+
+	$("#review-field").val(user_review)
+
 }
 
 function updateBookRatings(rating){
@@ -141,13 +145,56 @@ function updateBookRatings(rating){
 	}	
 }
 
+function updateTextReviews(reviews){
+	for(var i = 1; i<=reviews.length; i++)
+		$("#text-review").append()
+}
+
+var dialog = new mdc.dialog.MDCDialog(document.querySelector('#review-dialog'));
+
+
+if($("#edit-review").length){
+	dialog.listen('MDCDialog:accept', function() {
+	  console.log('accepted');
+	  user_review = $("#review-field").val()
+	  qwest.post('/update-ratings/', {
+	  	rating: user_rating,
+	  	book_id: book_id,
+	  	text: user_review,
+	  })
+	})
+
+	dialog.listen('MDCDialog:cancel', function() {
+	  console.log('canceled');
+	})
+
+	document.querySelector('#edit-review').addEventListener('click', function (evt) {
+	  dialog.lastFocusedTarget = evt.target;
+	  dialog.show();
+	})
+}
+
+$("#add-read-book-button").click(function(){
+	qwest.post('/add-read-book/', {
+		book_id: book_id
+	}).then(function(xhr, res){
+		window.location = '/read/' + book_id + '/'
+	})
+	.catch(function(e, xhr, res){
+		console.log(e)
+	})
+})
+
 qwest.get('/get-book/' + book_id + '/')
 	.then(function(xhr, res){
 		console.log(res)
 		user_rating = Number(res['user_rating'])
 		book_rating = Number(res['avg_rating'])
-		updateRatings(user_rating)
+		user_review = res['user_review']
+		console.log('REVIEW', res)
+		updateRatings(user_rating, user_review)
 		updateBookRatings(book_rating)
+		updateTextReviews(res['text_reviews'])
 		loadImage(res['image_link'])
 		loadGraph(res['graph_data'])
 		setRatingListener()

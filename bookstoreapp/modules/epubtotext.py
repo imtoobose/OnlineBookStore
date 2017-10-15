@@ -21,7 +21,11 @@ def __get_extension__(file_path):
 def __get_file_name__(file_path):
 	return os.path.splitext(os.path.basename(file_path))[0]
 
+def __get_parent_dir__(file_path):
+	return os.path.abspath(os.path.join(file_path, os.pardir))
+
 def convert(input_file, output_file='book.txt', extract_chapters=True, make_meta=True):
+	print('current dir', os.getcwd())
 	"""Converts input_file (epub) to a text file, optionally creating text files\
 		for each individual chapter in the toc.ncx file, and a pickled python array\
 		with chapter information in a file 'meta.pkl'
@@ -38,6 +42,7 @@ def convert(input_file, output_file='book.txt', extract_chapters=True, make_meta
 		raise TypeError('Invalid File Type. File must be a .epub file.')
 
 	i_file_name = __get_file_name__(input_file)
+	input_dir = os.path.dirname(input_file)
 
 	if output_file == 'book.txt':
 		output_file = i_file_name + '.txt'
@@ -48,12 +53,12 @@ def convert(input_file, output_file='book.txt', extract_chapters=True, make_meta
 
 	print('Converting ', i_file_name)
 
-	if not os.path.exists(os.path.join(os.getcwd(), 'extracts', i_file_name)):
+	if not os.path.exists(os.path.join(__get_parent_dir__(input_dir), 'extracts', i_file_name)):
 		f = zipfile.ZipFile(input_file, 'r')
-		f.extractall(os.path.join( os.getcwd(), 'extracts', i_file_name))
+		f.extractall(os.path.join(__get_parent_dir__(input_dir), 'extracts', i_file_name))
 		f.close()
 
-	book_dir = os.path.join(os.getcwd(), 'extracts', i_file_name)
+	book_dir = os.path.join(__get_parent_dir__(input_dir), 'extracts', i_file_name)
 	meta_dir = os.path.join(book_dir, 'META-INF')
 
 	container_xml = etree.parse(os.path.join(meta_dir, 'container.xml'))
@@ -93,9 +98,9 @@ def convert(input_file, output_file='book.txt', extract_chapters=True, make_meta
 	language = __get_or_empty__(content_file, './/dc:language', ns)
 
 	subarr = content_file.findall('.//dc:subject', ns)
-	print(subarr)
+
 	if not subarr == None:
-		subjects = ','.join([x.text for x in subarr])
+		subjects = ','.join([x.text.lower() for x in subarr])
 	else:
 		subjects = ''
 
@@ -114,7 +119,7 @@ def convert(input_file, output_file='book.txt', extract_chapters=True, make_meta
 
 	text_file_paths = []
 
-	search_toc = glob.glob(os.path.join('extracts','**/*.ncx'), recursive=True)
+	search_toc = glob.glob(os.path.join(__get_parent_dir__(input_dir), 'extracts','**/*.ncx'), recursive=True)
 
 	if len(search_toc) > 0:
 		toc_file = search_toc[0]
@@ -267,9 +272,9 @@ def convert(input_file, output_file='book.txt', extract_chapters=True, make_meta
 			pickle.dump(meta, metapkl)
 
 	processed.close()
-	shutil.rmtree('extracts')
+	# shutil.rmtree('extracts')
 	print('Completed conversion to ', os.path.join(processed_files_path, output_file))
-	return os.path.join(processed_files_path, output_file)
+	return os.path.join(processed_files_path, output_file), i_file_name
 
 
 if __name__ == '__main__':

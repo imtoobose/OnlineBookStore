@@ -23,6 +23,12 @@ def __convert_to_dict__(obj):
     return dic
 
 
+class Genre(models.Model):
+    genre = models.TextField(null=True, blank=True, default="")
+    def __str__(self):
+        return self.genre
+
+
 class Book(models.Model):
     author = models.CharField(max_length=300, default="", null=True)
     title = models.CharField(max_length=1000, default="", null=True)
@@ -40,7 +46,12 @@ class Book(models.Model):
     num_ratings = models.IntegerField(default=0, null=True, blank=True)
     epub_link = models.CharField(default=None, max_length=1000, null=True, blank=True)
     folder_link = models.CharField(default=None, max_length=1000, null=True, blank=True)
-
+    rating_keywords = models.TextField(default="", null=True, blank=True)
+    text_rating_count = models.IntegerField(default=0, null=True, blank=True)
+    genres = models.ManyToManyField(Genre)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title[:75]
                             if len(self.title) >
@@ -74,9 +85,13 @@ class UserProfile(models.Model):
     name = models.CharField(default='Anonymous', max_length=1000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+    read_books = models.ManyToManyField(Book)
 
 
 class Rating(models.Model):
     rating = models.FloatField(default=0.0, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, null=True, blank=True, on_delete=models.CASCADE)
+    text = models.TextField(null=True, blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True, null=True, blank=True)

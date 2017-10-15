@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% load compress %}
+		{% compress css %}
+			<link rel="stylesheet" type="text/x-scss" href="{% static 'css/read.scss' %}" />
+		{% endcompress %}
+		<title> OnLib | {{book_title}} </title>
+	</head>
+	<body>
+		<input id="book-dir" type="hidden" value="{{ book_dir }}"/>
+		<div id="main">
+	      <div id="prev" class="arrow">‹</div>
+	      <div id="area"></div>
+	      <div id="next" class="arrow">›</div>
+		</div>
+	</body>
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/epubjs/epub.min.js' %}"></script>
+	<script src="{% static 'js/epubjs/hooks.min.js' %}"></script>
+<!-- 	<script src="{% static 'js/epubjs/reader.min.js' %}"></script>
+ -->	<script src="{% static 'js/reader.js' %}"></script>
+</html>
