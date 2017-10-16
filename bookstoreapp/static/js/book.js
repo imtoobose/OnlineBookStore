@@ -8,6 +8,14 @@ function loadImage(src){
 
 function loadGraph(grapharr){
 	grapharr = JSON.parse(grapharr)
+	if(grapharr.length == 0){ 
+		$("#chapter-graph").remove()
+		$('#user-ratings').css({
+			"margin-bottom": "15px"
+		})
+		return
+	}
+
 	var arrlen = grapharr.length,
 		x = new Array(arrlen),
 		y = new Array(arrlen)
@@ -191,7 +199,6 @@ qwest.get('/get-book/' + book_id + '/')
 		user_rating = Number(res['user_rating'])
 		book_rating = Number(res['avg_rating'])
 		user_review = res['user_review']
-		console.log('REVIEW', res)
 		updateRatings(user_rating, user_review)
 		updateBookRatings(book_rating)
 		updateTextReviews(res['text_reviews'])
