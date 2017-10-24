@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <link rel="stylesheet" type="text/css" href="{% static 'css/style-book/style-table.css' %}">
+    <meta charset="UTF-8">
+    <title>Faculty</title>
+    {% block head %} {% endblock %}
+			{% block title %} {% endblock %}
+</head>
+<body>
+{%block header%}
+{% endblock%}
+<center>
+<h1>BOOK DETAILS</h1>
+
+     <div class="tbl-header">
+    <table cellpadding="0" cellspacing="0" border="0">
+      <thead>
+        <tr>
+            <td><h3>BOOK-NAME</h3></td>
+             <td><h3>AUTHOR&nbsp;</h3></td>
+             <td><h3>BOOK-TITLE</h3></td>
+             <td><h3>DATE</h3></td>
+
+        </tr>
+        </tr>
+      </thead>
+    </table>
+{% for book in books %}
+    <table cellpadding="0" cellspacing="0" border="0">
+      <tbody>
+        <tr>
+            <td><img style="height:250px;width:200px;" src="{{book.image_link}}"></td>
+    <td>{{book.author}}</td>
+    <td>{{book.title}}</td>
+    <td>{{book.pub_date}}</td>
+        </tr>
+      </tbody>
+       {% endfor%}
+
+    </table>
+
+</center>
+{% block content %}
+			{% endblock %}
+</body>
+</html>

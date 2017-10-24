@@ -10,7 +10,8 @@
 
 <body>
 
-	 <form>
+	 <form method="Post" action="/contact/">
+         {% csrf_token%}
 	    <h1 id="h"><center>Contact Form<center></h1>
 
     <div class="contentform">
@@ -97,7 +98,7 @@
 			<div class="form-group">
 			<p>Message <span>*</span></p>
 			<span class="icon-case"><i class="fa fa-comments-o"></i></span>
-                <textarea name="message" rows="14" data-rule="required" data-msg="Vérifiez votre saisie sur les champs : Le champ 'Message' doit être renseigné."></textarea>
+                <textarea name="message" id="message" rows="14" data-rule="required" data-msg="Vérifiez votre saisie sur les champs : Le champ 'Message' doit être renseigné."></textarea>
                 <div class="validation"></div>
 			</div>
 	</div>
