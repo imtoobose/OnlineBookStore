@@ -240,11 +240,16 @@ def view_book(request, book_id):
     text_reviews = list()
     if len(reviews) > 0:
     	for r in reviews:
-    		text_reviews.append(r.text)
+    		if not r.user == request.user and len(r.text.strip()) > 0:
+	    		text_reviews.append({
+	    			'text': r.text,
+	    			'rating': r.rating,
+	    			'user': r.user.username,
+	    		})
 
     bdict = book.to_dict()
     bdict['user_rating'] = rating
-    bdict['text_reviews'] = ['HELLO']
+    bdict['text_reviews'] = text_reviews
     bdict['user_review'] = review
 
     return JsonResponse(bdict)
@@ -255,10 +260,23 @@ def faculty(request):
 
 
 def view_book_html(request, book_id, book_slug):
-    return render(request, 'book.html', {
-        'id': book_id,
-        'book_name': ' '.join(book_slug.split('-')).title()
-    })
+	book = get_object_or_404(Book, pk=book_id)
+	reviews = Rating.objects.filter(book=book).order_by('-created_at')[:5]
+	text_reviews = list()
+	if len(reviews) > 0:
+		for r in reviews:
+			if not r.user == request.user and len(r.text.strip()) > 0:
+				text_reviews.append({
+					'text': r.text,
+					'rating': r.rating,
+					'user': r.user.username,
+				})
+
+	return render(request, 'book.html', {
+	'id': book_id,
+	'book_name': ' '.join(book_slug.split('-')).title(),
+	'text_reviews': text_reviews
+	})
 
 
 def read_book(request, book_id):
@@ -338,6 +356,7 @@ def contact(request):
             return redirect(home)
         else:
             return render(request, 'contact.html', {})
+            
     elif request.method == 'POST':
         surname = request.POST['nom']
         email = request.POST['email']

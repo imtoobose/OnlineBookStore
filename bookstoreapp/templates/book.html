@@ -79,9 +79,12 @@
 				</section>
 				{% endif %}
 				<section id="reviews" class="reviews">
+					{% if text_reviews|length > 0 %}
+					<p class="thin-header"> REVIEWS </p>
+					{% endif %}
 					{% for review in text_reviews %}
 						<p id="{{forloop.counter}}-text-review" class="text-review">
-							{{review}}
+							<strong>{{review.rating}} {{review.user}}: </strong>{{review.text}}
 						</p>
 					{% endfor %}
 				</section>

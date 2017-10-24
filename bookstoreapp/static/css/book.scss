@@ -69,16 +69,18 @@ body * {
 }
 
 
-.user-ratings{
+.user-ratings, .reviews{
 	position: relative;
 	padding: 30px 50px 0 50px;
 
-	.thin-header{
-		padding: 0;
-		margin-bottom: 5px;
-		font-size: 14px;
-		// text-align: center;
-	}
+	
+}
+
+.thin-header{
+	padding: 0;
+	margin-bottom: 5px;
+	font-size: 14px;
+	// text-align: center;
 }
 
 .btn-rating-star{
