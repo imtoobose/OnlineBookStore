@@ -106,6 +106,7 @@ function setRatingListener(){
 		})
 		.then(function(xhr, response){
 			user_rating = id
+			$("#edit-review").show()
 			console.log(response.data.book_rating)
 		})
 	})
@@ -199,9 +200,14 @@ qwest.get('/get-book/' + book_id + '/')
 		user_rating = Number(res['user_rating'])
 		book_rating = Number(res['avg_rating'])
 		user_review = res['user_review']
+		
+		if(user_rating === 0){
+			$("#edit-review").hide()
+		}
+
 		updateRatings(user_rating, user_review)
 		updateBookRatings(book_rating)
-		updateTextReviews(res['text_reviews'])
+		// updateTextReviews(res['text_reviews'])
 		loadImage(res['image_link'])
 		loadGraph(res['graph_data'])
 		setRatingListener()

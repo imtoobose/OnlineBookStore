@@ -37,7 +37,6 @@ class Author(models.Model):
     description = models.TextField(default="", null=True, blank=True)
     photo_url = models.TextField(default="", null=True, blank=True)
 
-
     def __str__(self):
         return self.name
 
@@ -142,7 +141,10 @@ class Book(models.Model):
     genres = models.ManyToManyField(Genre)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-    
+    r1 = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, related_name='r1_b')
+    r2 = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, related_name='r2_b')
+    r3 = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, related_name='r3_b')
+    r4 = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, related_name='r4_b')
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title[:75]
                             if len(self.title) >

@@ -6,7 +6,13 @@
           href="{% static 'node_modules/material-components-web/dist/material-components-web.css' %}">
         <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+        <style>
+        	.search-icon{
+        		margin-top: 15px;
+        		margin-left: 25px;
+        		font-size: 1.4rem;
+        	}
+    	</style>
 			{% block head %} {% endblock %}
 			{% block title %} {% endblock %}
 
@@ -15,8 +21,22 @@
 		{% block header %}
 		{% endblock %}
 
+		<!-- <div class="search" id="search-layout">
+			<div>
+				<i class="fa fa-search"></i>
+				<div class="mdc-textfield">
+				  <input type="text" id="my-textfield" class="mdc-textfield__input">
+				  <label class="mdc-textfield__label" for="my-textfield">Hint text</label>
+				  <div class="mdc-textfield__bottom-line"></div>
+				</div>
+			</div>
+			<section class="search-results">
+
+			</section>
+		</div> -->
+
 		<main class="mdc-toolbar-fixed-adjust">
-			<aside class="mdc-temporary-drawer mdc-typography">
+			<!-- <aside class="mdc-temporary-drawer mdc-typography">
 			  <nav class="mdc-temporary-drawer__drawer">
 
 			    <header class="mdc-temporary-drawer__header"
@@ -36,7 +56,7 @@
 			      </a>
 			    </nav>
 			  </nav>
-			</aside>
+			</aside> -->
 			{% block content %}
 			{% endblock %}
 		</main>
@@ -59,5 +79,9 @@
 	  		else
 	  			drawer.open = true
 	  	});
+
+	  	//$("#search-icon").click(function(){
+
+	  		//})
 	</script>
 </html>

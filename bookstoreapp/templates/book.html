@@ -4,6 +4,7 @@
 	<title> Onlib | {{book_name}} </title>
 	{% compress css %}
 		<link rel="stylesheet" type="text/x-scss" href="{% static 'css/book.scss' %}" />
+
 	{% endcompress %}
 {% endblock %}
 {% block header %}
@@ -42,7 +43,7 @@
 					<div class="mdc-card__primary">
 						<h1 id="book-title" class="mdc-card__title mdc-card__title--large">
 						</h1>
-						<h2 id="book-author" class="mdc-card__subtitle"></h2>
+						<a href={{author_url}}><h2 id="book-author" class="mdc-card__subtitle"></h2></a>
 						<section id="book-ratings" class="mdc-card__subtitle">
 							{% for count in '12345' %}
 								<i id="book-rating-star-{{forloop.counter}}" class="fa fa-star rating-star rating-star-inactive"></i>
@@ -66,7 +67,7 @@
 
 	<div class="mdc-layout-grid chapter-graph-grid">
 		<div class="mdc-layout-grid__inner">
-			<section class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8">
+			<section class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8" style="justify-content: flex-start;">
 				{% if user.is_authenticated %}
 				<section id="user-ratings" class="user-ratings">
 					<p class="thin-header"> YOUR REVIEW </p>
@@ -84,7 +85,8 @@
 					{% endif %}
 					{% for review in text_reviews %}
 						<p id="{{forloop.counter}}-text-review" class="text-review">
-							<strong>{{review.rating}} {{review.user}}: </strong>{{review.text}}
+							<strong>{{review.user}}  {% for r in review.rating %} <i class="fa fa-star rating-star rating-star-inactive user-rating-star" style="color:#F44336"></i> {% endfor %}
+							</strong><br>{{review.text}}
 						</p>
 					{% endfor %}
 				</section>
@@ -94,6 +96,16 @@
 			</section>
 
 			<section class="mdc-layout-grid__cell--span-4">
+				<h3 > Similar </h3>
+				<div class="mdc-layout-grid chapter-graph-grid">
+					<div class="mdc-layout-grid__inner">
+
+					{% for book in similar %}
+						<a class="mdc-card home-card regular-card mdc-layout-grid__cell mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-6-phone" href="{{book.url}}" style="background-image: url('{{book.image_link}}');"><section class="mdc-card__primary"><h3 class="mdc-card__title mdc-card__title--large">{{book.title}}</h3><h5 class="mdc-card__subtitle">{{book.author}}</h5></section></a>
+					{% endfor %}
+				</div>
+			</div>
+
 			</section>
 		</div>
 	</div>

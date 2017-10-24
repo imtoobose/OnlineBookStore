@@ -25,6 +25,11 @@ body * {
 		height: 150px;
 		overflow-y: auto;
 	}
+
+	.author-description{
+		height: 250px;
+		overflow-y: auto;
+	}
 }
 
 .author-card{
@@ -103,4 +108,36 @@ body * {
 
 i.rating-star{
 	pointer-events: none;
+}
+
+.home-card{
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin-bottom: 15px;
+	text-decoration: none;
+
+	.mdc-card__primary{
+		background: #FFF;
+		padding: 10px;
+		&:last-child{
+			padding-bottom: 10px;
+		}
+	}
+
+	.mdc-card__title--large{
+		font-size: 0.8rem;
+		line-height: 1rem;
+		background:#FFF;
+	}
+
+	.mdc-card__subtitle{
+		font-size: 0.7rem;
+		line-height: 1rem;
+	}
+
+	&.regular-card{
+		max-width: 150px;
+		min-height: 250px;
+	}
 }

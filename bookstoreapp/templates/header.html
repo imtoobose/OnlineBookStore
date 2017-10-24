@@ -1,11 +1,11 @@
 <header class="mdc-toolbar mdc-toolbar--fixed home-tool mdc-toolbar--waterfall">
   <div class="mdc-toolbar__row">
     <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
-      <a id="toolbar-hamburger" href="#" class="fa mdc-toolbar__icon--menu fa-bars" style="font-size: 20px"></a>
+     <!--  <a id="toolbar-hamburger" href="#" class="fa mdc-toolbar__icon--menu fa-bars" style="font-size: 20px"></a> -->
       <a href="{% url 'home'%}" class="mdc-toolbar__title" style="text-decoration: none; color:#FFF">OnLib</a>
       <a href="{% url 'contact'%}" class="mdc-toolbar__title" style="text-decoration: none; color:#FFF">Contact</a>
       <a href="{% url 'about'%}" class="mdc-toolbar__title" style="text-decoration: none; color:#FFF">About</a>
-        <input type="search"  style="border:4px solid #f44336;position:absolute;top:25%;left:60%;padding:5px;border-radius:4px" placeholder="search"><i class="fa fa-search" style="font-size:23px;position:absolute;left:89%;top:36%;background:#f44336"></i>
+      <!-- <i id="search-icon" class="fa fa-search search-icon"></i> -->
     </section>
       <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
 	      {% if not user.is_authenticated %}
