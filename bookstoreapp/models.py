@@ -185,6 +185,9 @@ class UserProfile(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     read_books = models.ManyToManyField(Book)
 
+    def __str___(self):
+        return self.user.username
+
 
 class Rating(models.Model):
     rating = models.FloatField(default=0.0, null=True, blank=True)
@@ -193,3 +196,6 @@ class Rating(models.Model):
     text = models.TextField(null=True, blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     modified_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username + '-' + self.book.title
