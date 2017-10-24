@@ -17,4 +17,7 @@ urlpatterns = [
     url(r'^genre/(?P<genre>\w+)/$', views.view_book_genre, name='view-genre'),
     url(r'^get-genre/(?P<genre>\w+)/(?P<page>\d+)/$', views.get_book_genre, name='get-genre'),
     url(r'^$', views.home, name='home'),
+    url(r'^faculty/$', views.faculty, name='faculty')
+
 ]
+

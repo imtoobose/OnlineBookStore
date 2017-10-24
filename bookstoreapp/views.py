@@ -21,10 +21,10 @@ from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage
 
 # User defined module imports
-from .models import Book, UserProfile, Rating, Genre
+from .models import Book, UserProfile, Rating, Genre, ContactForm
 from .modules.epubtotext import convert, __get_extension__, __get_file_name__
 from .modules.epubnlp import get_nlp_features
-
+from django.db.models import Q
 
 nlp = None
 
@@ -249,6 +249,10 @@ def view_book(request, book_id):
 
     return JsonResponse(bdict)
 
+def faculty(request):
+    books = Book.objects.all()
+    return render(request,'faculty.html',{"books":books})
+
 
 def view_book_html(request, book_id, book_slug):
     return render(request, 'book.html', {
@@ -329,7 +333,32 @@ def add_read_book(request):
 		return JsonResponse({'success': 'false'})
 
 def contact(request):
-    return render(request, 'contact.html', {})
+    if request.method == 'GET':
+        if request.user.is_authenticated():
+            return redirect(home)
+        else:
+            return render(request, 'contact.html', {})
+    elif request.method == 'POST':
+        surname = request.POST['nom']
+        email = request.POST['email']
+        company = request.POST['society']
+        function = request.POST['fonction']
+        subject = request.POST['sujet']
+        message = request.POST['message']
+        city = request.POST['ville']
+        companyaddress = request.POST['adresse']
+        postcode=request.POST['postal']
+        phone=request.POST['phone']
+        name=request.POST['prenom']
+
+        Contact = ContactForm(surname=surname,
+                            email=email,function=function,Postcode=postcode,
+                            Company=company,CompanyAddress=companyaddress,
+                            Phone=phone,city=city,subject=subject,Message=message,name=name
+                             )
+        Contact.save()
+
+        return redirect(reverse('home'))
 
 
 def about(request):
@@ -391,3 +420,8 @@ def signout(request):
     if request.user.is_authenticated():
         logout(request)
         return redirect(reverse('home'))
+
+
+
+
+

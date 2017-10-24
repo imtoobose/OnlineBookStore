@@ -14,34 +14,35 @@
    <div class="box">
 
       <div class="title">Student SignUp</div>
-	   <div class="input">
-      <form action="/signup/" method="post">
-        {% csrf_token%}  
+
+      <form action="/signup/" method="post" onsubmit="return validate()">
+        {% csrf_token%}
+           <div class="input">
          <label for="name">Name</label>
-         <input type="text" name="name" id="name">
+         <input type="text" name="name" id="name" required>
          <span class="spin"></span>
       </div>
 
       <div class="input">
          <label for="roll">Roll Number</label>
-         <input type="text" name="roll" id="roll">
+         <input type="text" name="roll" id="roll" required>
          <span class="spin"></span>
       </div>
 
 	   <div class="input">
          <label for="email">Email-id</label>
-         <input type="email" name="email" id="email">
+         <input type="email" name="email" id="email" onblur="valid-email(this.value);" required>
          <span class="spin"></span>
       </div>
 
       <div class="input">
          <label for="pass">Password</label>
-         <input type="password" name="pass" id="pass">
+         <input type="password" name="pass" id="pass" required>
          <span class="spin"></span>
       </div>
 
       <div class="button login">
-         <input type="submit" value="Create Account"/>
+         <input type="submit" value="Create Account" />
       </div>
    </form>
       <a href="" class="pass-forgot">Forgot your password?</a>
@@ -189,6 +190,32 @@ $(function() {
     }
   });
 });
+
+function validate()
+{
+var password= document.getElementById("pass");
+var name= document.getElementById("name");
+var id= document.getElementById("id");
+var email= document.getElementById("email");
+
+if(id!=11)
+{
+alert("Incorrect id number");
+return false;
+}
+return true;
+}
+function valid-email(email)
+{
+var reEmail = /^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/;
+
+  if(!email.match(reEmail))
+  {
+    alert("Invalid email address");
+    return false;
+  }
+return true;
+}
 
 {% block scripts %}
 			{% endblock %}
