@@ -31,7 +31,7 @@
 
 	   <div class="input">
          <label for="email">Email-id</label>
-         <input type="email" name="email" id="email" onblur="valid-email(this.value);" required>
+         <input type="email" name="email" id="email" onblur="validEmail(this.value);" required>
          <span class="spin"></span>
       </div>
 
@@ -195,17 +195,19 @@ function validate()
 {
 var password= document.getElementById("pass");
 var name= document.getElementById("name");
-var id= document.getElementById("id");
+var id= document.getElementById("roll");
 var email= document.getElementById("email");
 
-if(id!=11)
+if(id.value.length != 11)
 {
-alert("Incorrect id number");
-return false;
+  alert("Incorrect id number");
+  return false;
 }
+
 return true;
 }
-function valid-email(email)
+
+function validEmail(email)
 {
 var reEmail = /^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/;
 

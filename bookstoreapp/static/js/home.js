@@ -5,6 +5,10 @@ function truncate(s, l){
 		return s
 }
 
+function toTitleCase(s){
+	return s.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
 function createCard(src, auth, title, url){
 	var card = document.createElement('a'),
 			primary = document.createElement('section'),
@@ -81,7 +85,7 @@ function initlializeSlider(){
 	})
 }
 
-function add_elements(arr){
+function add_elements(arr, narr){
 	var photos = document.getElementById('photos')
 	var slidewrap = document.getElementById('swiper-wrapper')
 
@@ -89,16 +93,65 @@ function add_elements(arr){
 	for(var i = 0; i < arrLen; i++){
 		book = arr[i]
 		card = createCard(book['image_link'], book['author'], book['title'], book['url'])
-		photos.appendChild(card[0])
+		
 		slidewrap.appendChild(card[1])
+
+		if(i < narr.length){
+			book = narr[i]
+			card = createCard(book['image_link'], book['author'], book['title'], book['url'])
+			photos.appendChild(card[0])
+		}
+	}
+	
+	initlializeSlider()
+}
+
+function createGrid(g){
+	var div, h1, h2, photos 
+	div = document.createElement('div')
+	h1 = document.createElement('h1')
+	h3 = document.createElement('h3')
+	a = document.createElement('a')
+	photos = document.createElement('div')
+
+	div.classList.add('mdc-layout-grid')
+	div.classList.add('photo-grid')
+	a.href = '/genre/' + g.genre + '/'
+	h1.classList.add('content-title')
+	h3.classList.add('content-subtitle')
+	photos.classList.add('photos')
+	photos.classList.add('mdc-layout-grid__inner')
+	h1.innerText = toTitleCase(g.genre)
+	h3.innerText = ''
+	a.appendChild(h1)
+	div.appendChild(a)
+	div.appendChild(h3)
+	div.appendChild(photos)
+	var book, card, bookarr = g.books
+
+	for(var i  in bookarr){
+		book = bookarr[i]
+		card = createCard(book['image_link'], book['author'], book['title'], book['url'])[0]
+		photos.appendChild(card)
 	}
 
-	initlializeSlider()
+	return div
+}
+
+function add_genres(arr){
+	var genres = document.getElementById('genres')
+	var g_len = arr.length
+	for(var i = 0; i<g_len; i++){
+		g = arr[i]
+		grid = createGrid(g)
+		genres.appendChild(grid)
+	}
 }
 
 qwest.get('/get-all-books/')
 	.then(function(xhr, res){
-		add_elements(res.data)
+		add_elements(res.data, res.new_books)
+		add_genres(res.genre_books)
 })
 	.catch(function(e, xhr, res){
 		console.log(e)

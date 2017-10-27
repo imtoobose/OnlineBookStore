@@ -20,24 +20,25 @@
             <td><h3>BOOK-NAME</h3></td>
              <td><h3>AUTHOR&nbsp;</h3></td>
              <td><h3>BOOK-TITLE</h3></td>
-             <td><h3>DATE</h3></td>
+             <td><h3>BUYER</h3></td>
 
         </tr>
         </tr>
       </thead>
     </table>
-{% for book in books %}
+         {%for d in data %}
+{% for book in d.books %}
     <table cellpadding="0" cellspacing="0" border="0">
       <tbody>
         <tr>
             <td><img style="height:250px;width:200px;" src="{{book.image_link}}"></td>
     <td>{{book.author}}</td>
     <td>{{book.title}}</td>
-    <td>{{book.pub_date}}</td>
+    <td>{{user}}</td>
         </tr>
       </tbody>
        {% endfor%}
-
+{% endfor%}
     </table>
 
 </center>

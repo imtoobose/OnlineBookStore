@@ -15,6 +15,8 @@ def chunk_load(f, chunk_size=1024):
         yield text
 
 def get_nlp_features(book_path, nlp, plot=False):
+    excluded_chapters = ['COPYRIGHT', 'TITLE', 'INDEX', 'ACKNOWLEDGMENTS', 
+                        'APPENDIX', 'PREFACE', 'COVER']
     with open(os.path.join(book_path, 'meta.pkl'),'rb') as f:
         m = pickle.load(f)
         arr = m['chapters']
@@ -25,6 +27,9 @@ def get_nlp_features(book_path, nlp, plot=False):
         for chap in arr:
             count = 0
             text_word_len = 0
+
+            if chap['chapname'].upper() in excluded_chapters:
+                continue
 
             with open(os.path.join(book_path, chap['filename']), 'r') as f:
                 for chunk in chunk_load(f):

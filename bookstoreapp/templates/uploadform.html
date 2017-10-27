@@ -2,14 +2,49 @@
 
 <html>
 	<head>
-	</head>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style-book/upload-style/upload-style.css' %}">
+	{% block head %} {% endblock %}
+			{% block title %} {% endblock %}
+    </head>
 
 	<body>
+
+{%block header%}
+{% endblock%}
+    <div class="format">
+	<div class="header">
+	<center>
+	<p>Upload Files</p>
+	</center>
+	</div>
 		<form method="POST" action="/upload-book/" enctype="multipart/form-data">
 			{% csrf_token %}
 			
-			<input type="file" name="book">
-			<input type="submit" >
+			<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<center>
+	     <input type="file" name="book" id="file" class="inputfile">
+		 <label for="file">Choose a file</label>
+		 </center>
+		 <br>
+
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<center>
+			<input type="submit" value="upload">              <input type="submit" value="cancel">
+			</center>
 		</form>
+		</div>
+{% block content %}
+			{% endblock %}
 	</body>
 </html>

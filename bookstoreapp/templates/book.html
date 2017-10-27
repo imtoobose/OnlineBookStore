@@ -4,6 +4,7 @@
 	<title> Onlib | {{book_name}} </title>
 	{% compress css %}
 		<link rel="stylesheet" type="text/x-scss" href="{% static 'css/book.scss' %}" />
+
 	{% endcompress %}
 {% endblock %}
 {% block header %}
@@ -11,6 +12,25 @@
 {% endblock %}
 
 {% block content %}
+	<div id="review-dialog" class="mdc-dialog" style="z-index: 20;"> 
+		<div class="mdc-dialog__surface">
+			<header class="mdc-dialog__header">
+		      <h2 id="my-mdc-dialog-label" class="mdc-dialog__header__title">
+		        Leave a review
+		      </h2>
+		    </header>
+		    <section id="my-mdc-dialog-description" class="mdc-dialog__body">
+				<div class="mdc-textfield mdc-textfield--multiline mdc-theme--secondary" data-mdc-auto-init="MDCTextfield">
+					  <textarea id="review-field" maxlength=340 rows=5 cols=140 id="firstname" class="mdc-textfield__input"></textarea >
+				</div>
+			</section>
+			<footer class="mdc-dialog__footer">
+		        <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">Decline</button>
+		        <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept">Accept</button>
+		    </footer>
+		</div>
+
+	</div>
 	<input type="hidden" id="get-id" value="{{id}}"/>
 	<br>
 	<br>
@@ -23,16 +43,23 @@
 					<div class="mdc-card__primary">
 						<h1 id="book-title" class="mdc-card__title mdc-card__title--large">
 						</h1>
-						<h2 id="book-author" class="mdc-card__subtitle"></h2>
+						<a href={{author_url}}><h2 id="book-author" class="mdc-card__subtitle"></h2></a>
+						<section id="book-ratings" class="mdc-card__subtitle">
+							{% for count in '12345' %}
+								<i id="book-rating-star-{{forloop.counter}}" class="fa fa-star rating-star rating-star-inactive"></i>
+							{% endfor %}
+						</section>
 						<hr>
 					</div>
 					
 					<section id="book-description" class="book-description mdc-card__supporting-text">
     				</section>
-
+    				{% if request.user.is_authenticated %}
+    				<br>
     				<section id="book-actions" class="mdc-card__actions">
-    					<button class="mdc-button mdc-button--compact mdc-button--raised mdc-button--accent mdc-card__action">Buy Now</button>
+    					<button class="mdc-button mdc-button--compact mdc-button--raised mdc-button--primary mdc-card__action" id="add-read-book-button">Read Now</button>
     				</section>
+    				{% endif %}
 				<!-- </div> -->
 			</section>
 		</div>
@@ -40,16 +67,45 @@
 
 	<div class="mdc-layout-grid chapter-graph-grid">
 		<div class="mdc-layout-grid__inner">
-			<section class="mdc-layout-grid__cell--span-2">
-			</section>
-
-			<section class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8">
+			<section class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8" style="justify-content: flex-start;">
+				{% if user.is_authenticated %}
+				<section id="user-ratings" class="user-ratings">
+					<p class="thin-header"> YOUR REVIEW </p>
+				{% for count in '12345' %}
+					<button id="{{forloop.counter}}-user-rating" class="btn-rating-star">
+						<i id="user-rating-star-{{forloop.counter}}" class="fa fa-star rating-star rating-star-inactive user-rating-star"></i>
+					</button>
+				{% endfor %}
+				<i id="edit-review" class="fa fa-pencil" aria-hidden=true style="font-size:30px; margin-left: 30px; cursor: pointer;"></i>
+				</section>
+				{% endif %}
+				<section id="reviews" class="reviews">
+					{% if text_reviews|length > 0 %}
+					<p class="thin-header"> REVIEWS </p>
+					{% endif %}
+					{% for review in text_reviews %}
+						<p id="{{forloop.counter}}-text-review" class="text-review">
+							<strong>{{review.user}}  {% for r in review.rating %} <i class="fa fa-star rating-star rating-star-inactive user-rating-star" style="color:#F44336"></i> {% endfor %}
+							</strong><br>{{review.text}}
+						</p>
+					{% endfor %}
+				</section>
 				<div id="graph-card">
 					<canvas id="chapter-graph"></canvas>
 				</div>
 			</section>
 
-			<section class="mdc-layout-grid__cell--span-2">
+			<section class="mdc-layout-grid__cell--span-4">
+				<h3 > Similar </h3>
+				<div class="mdc-layout-grid chapter-graph-grid">
+					<div class="mdc-layout-grid__inner">
+
+					{% for book in similar %}
+						<a class="mdc-card home-card regular-card mdc-layout-grid__cell mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-6-phone" href="{{book.url}}" style="background-image: url('{{book.image_link}}');"><section class="mdc-card__primary"><h3 class="mdc-card__title mdc-card__title--large">{{book.title}}</h3><h5 class="mdc-card__subtitle">{{book.author}}</h5></section></a>
+					{% endfor %}
+				</div>
+			</div>
+
 			</section>
 		</div>
 	</div>

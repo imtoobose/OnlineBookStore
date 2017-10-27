@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load compress %}
+{% block head  %}
+	<title> Onlib | {{book_name}} </title>
+	{% compress css %}
+		<link rel="stylesheet" type="text/x-scss" href="{% static 'css/book.scss' %}" />
+		<link rel="stylesheet" type="text/x-scss" href="{% static 'css/home.scss' %}" />
+	{% endcompress %}
+{% endblock %}
+{% block header %}
+	{% include "header.html" %}
+{% endblock %}
+
+{% block content %}
+	<input type="hidden" id="get-id" value="{{id}}"/>
+	<br>
+	<br>
+	<div class="mdc-layout-grid">
+		<div class="mdc-layout-grid__inner">
+			<section id="author-card" class="book-card mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-2" style="background-image: url('{{photo_url}}')">
+			</section>
+
+			<section class="description-card mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-10">
+					<div class="mdc-card__primary">
+						<h1 id="book-title" class="mdc-card__title mdc-card__title--large">{{name}}</h1>
+						<hr>
+					</div>
+					
+					<section id="author-description" class="author-description mdc-card__supporting-text">{{description}}</section>
+				<!-- </div> -->
+			</section>
+		</div>
+	</div>
+
+	<div class="mdc-layout-grid photo-grid">
+		<h1 class="content-title"> Books </h3>
+		<h3 class="content-subtitle"> {{name|title}}'s Work </h3>
+		<div id="photos" class="photos mdc-layout-grid__inner">
+			{% for book in books %}
+				<a class="mdc-card home-card regular-card mdc-layout-grid__cell mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-12-phone" href="{{book.url}}" style="background-image: url('{{book.image_link}}');"><section class="mdc-card__primary"><h3 class="mdc-card__title mdc-card__title--large">{{book.title}}</h3><h5 class="mdc-card__subtitle">{{book.author}}</h5></section></a>
+			{% endfor %}
+		</div>
+	</div>
+
+	<div class="background_cover">
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'node_modules/chart.js/dist/Chart.min.js' %}"></script>
+	<script src="{% static 'js/book.js' %}"></script>
+{% endblock %}

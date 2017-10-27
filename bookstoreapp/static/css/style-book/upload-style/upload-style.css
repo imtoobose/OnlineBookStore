@@ -1,0 +1,46 @@
+.format{
+	width:350px;
+	height:400px;
+	position:absolute;
+	border:2px solid #f44336;
+	top:25%;
+	left:40%;
+	}
+
+	.header{
+	width:350px;
+	height:70px;
+	background:#f44336;
+	color:white;
+	position:absolute;
+	top:0;
+	font-size:20px;
+	}
+
+	input[type=submit]
+	{
+	padding:15px 25px;
+	background:#f44336;
+	color:white;
+	border:2px solid white;
+	}
+
+	.inputfile{
+	width:0.1px;
+	height:0.1px;
+	opacity:0;
+	overflow:hidden;
+	position:absolute;
+	z-index:-1;
+	}
+
+	.inputfile + label{
+	border:2px solid white;
+	padding:15px 25px;
+	font-weight:700;
+	color:white;
+	background-color:#f44336;
+	display:inline-block;
+	cursor:pointer;
+
+	}

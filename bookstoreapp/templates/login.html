@@ -14,7 +14,7 @@
       {% csrf_token %}
       <div class="title">Student Login</div>
       <div class="input">
-         <label for="name">Roll Number</label>
+         <label for="name">SAP ID</label>
          <input type="text" name="name" id="name">
          <span class="spin"></span>
       </div>
@@ -29,8 +29,8 @@
          <input type="submit" value="Login"></button>
       </div>
       <a href="" class="pass-forgot">Forgot your password?</a>
-      <a href="{% url 'signup' %}" class="pass-forgot" style="margin-top: 10px">Register</a>
-   </form>
+
+
 
    <div class="overbox">
       <div class="material-button alt-2"><span class="shape"></span></div>
@@ -38,25 +38,25 @@
       <div class="title">Faculty Login</div>
 
       <div class="input">
-         <label for="regname">Mobile Number</label>
-         <input type="text" name="regname" id="regname">
+         <label for="regname">SAP ID</label>
+         <input type="text" name="name" id="regname">
          <span class="spin"></span>
       </div>
 
       <div class="input">
          <label for="reregpass">Password</label>
-         <input type="password" name="password" id="reregpass">
+         <input type="password" name="pass" id="reregpass">
          <span class="spin"></span>
       </div>
 
       <div class="button">
-         <input type="submit"><span>Login Into Portal</span></input>
+         <input type="submit" value="login"><span>Login Into Portal</span></input>
 
       </div>
 
-      <a href="" class="pass1">Forgot your password?</a>
-   </div>
 
+   </div>
+   </form>
 </div>
 {% block content %}
 			{% endblock %}
