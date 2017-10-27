@@ -6,7 +6,34 @@
           href="{% static 'node_modules/material-components-web/dist/material-components-web.css' %}">
         <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <style>
+        	.search-icon{
+        		margin-top: 15px;
+        		margin-left: 25px;
+        		font-size: 1.4rem;
+        		cursor: pointer;
+        	}
 
+        	.search{
+        		position: fixed;
+        		height: 100%;
+        		width: 100%;
+        		top: 0;
+        		left: 0;
+        		background: #FFF;
+        		z-index: 2000;
+        		overflow-y: auto;
+        	}
+        	
+        	#close-search, .result{
+        		transition: .1s linear;
+        	}
+
+        	#close-search:hover, .result:hover{
+        		color: #F44336 !important;
+        	}
+
+    	</style>
 			{% block head %} {% endblock %}
 			{% block title %} {% endblock %}
 
@@ -15,28 +42,42 @@
 		{% block header %}
 		{% endblock %}
 
+		<div class="search" id="search-layout">
+			<div class="mdc-layout-grid chapter-graph-grid">
+				<div class="mdc-layout-grid__inner">
+					<div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
+						
+					</div>
+					<div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-8">
+						<div style="width:100%" class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+						  <input type="text" id="search-textfield" class="mdc-textfield__input" >
+						  <label class="mdc-textfield__label" for="search-textfield">Search</label>
+						  <div class="mdc-textfield__bottom-line"></div>
+						</div>
+					</div>
+
+					<div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
+						<i id="close-search" style="font-size:1.5rem; margin-top: 40px; cursor:pointer;" class="fa fa-times"></i>
+					</div>
+				</div>
+			</div>
+
+			<section id="search-results" class="search-results" style="width: 90%; margin: 0 auto">
+				<!-- <div class="result" style="width:100%; margin: 0 auto">
+					<hr class="search-hr" style="opacity:0.4">
+					<br>
+					<p style="font-size: 1.2rem"> Harry Potter - JK Rowling </p>
+					<br>
+					<hr>
+				</div>
+
+				<div class="result" style="width:100%">
+					<p> Harry Potter 2 - JK Rowling </p>
+				</div> -->
+			</section>
+		</div>
+
 		<main class="mdc-toolbar-fixed-adjust">
-			<aside class="mdc-temporary-drawer mdc-typography">
-			  <nav class="mdc-temporary-drawer__drawer">
-
-			    <header class="mdc-temporary-drawer__header"
-			    	style='background: url("{% static 'images/abstract.png'%}"); background-position: center; background-size:cover; background-repeat: no-repeat; min-height:250px;'>
-			      <div class="mdc-temporary-drawer__header-content"
-			      	   >
-			        Header content goes here
-			      </div>
-			    </header>
-
-			    <nav id="icon-with-text-demo" class="mdc-temporary-drawer__content mdc-list">
-			      <a class="mdc-list-item mdc-temporary-drawer--selected" href="#">
-			        <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">inbox</i>Inbox
-			      </a>
-			      <a class="mdc-list-item" href="#">
-			        <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">star</i>Star
-			      </a>
-			    </nav>
-			  </nav>
-			</aside>
 			{% block content %}
 			{% endblock %}
 		</main>
@@ -51,13 +92,48 @@
 		var toolbar = mdc.toolbar.MDCToolbar.attachTo(document.querySelector('.mdc-toolbar'));
 	  	toolbar.fixedAdjustElement = document.querySelector('.mdc-toolbar-fixed-adjust');
 
-	  	let drawer = new mdc.drawer.MDCTemporaryDrawer(document.querySelector('.mdc-temporary-drawer'));
-	  	
-	  	document.getElementById('toolbar-hamburger').addEventListener('click', () => {
-	  		if(drawer.open)
-	  		drawer.open = false
-	  		else
-	  			drawer.open = true
-	  	});
+	  	$("#search-layout").hide()
+
+	  	$("#search-icon").click(function(){
+	  		$("#search-layout").show()
+	  	})
+
+	  	$("#close-search").click(function(){
+	  		$("#search-layout").hide()
+	  	})
+
+	  	function createResult(book){
+	  		var result = $('<a style="text-decoration:none; color:#000" class="result" style="width:100%; margin: 0 auto" href="'+ book.url +'"><hr class="search-hr" style="opacity:0.1"><br>\
+					<p style="font-size: 1.2rem"> ' + book.title + ' - ' + book.author + '</p>\
+					<br>\
+					<hr style="opacity:0.1>\
+				</a>')
+
+				console.log(result.html())
+
+	  		return result
+	  	}
+
+	  	$("#search-textfield").on('keyup', function(e){
+	  		if(e.which == 13){
+	  			qwest.get('/search?s=' + $(this).val())
+	  			.then(function(xhr, res){
+	  				$("#search-results").html('')
+	  				if(res.data.length === 0){
+	  					$("#search-results").html(createResult({
+	  						'title': '- No Results Found',
+	  						'url': '#',
+	  						'author': ''
+	  					}))
+	  				}
+
+	  				for(var i in res.data){
+	  					$("#search-results").append(createResult(res.data[i]))
+	  				}
+	  			})
+	  		}
+	  	})
+
+
 	</script>
 </html>

@@ -19,11 +19,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage
+from django.db.models import Q
 
 # User defined module imports
-from .models import Book, UserProfile, Rating, Genre, ContactForm
+from .models import Book, UserProfile, Rating, Genre, ContactForm, Author
 from .modules.epubtotext import convert, __get_extension__, __get_file_name__
 from .modules.epubnlp import get_nlp_features
+from .modules.create_recommendations import create_book_graph
 from django.db.models import Q
 
 nlp = None
@@ -40,12 +42,10 @@ def get_books(req):
 
     for book in books:
         bdict = book.to_dict()
-        # bdict['url'] = book.get_url()
         send_data['data'].append(bdict)
 
     for book in new_books:
     	bdict = book.to_dict()
-    	# bdict['url'] = book.get_url()
     	send_data['new_books'].append(bdict)
 
     genres = Genre.objects.annotate(num_books=Count('book'))\
@@ -110,6 +110,13 @@ def get_book_genre(req, genre, page):
 		'data': data
 		})
 
+def view_author(req, author_id):
+	author = get_object_or_404(Author, pk=author_id)
+	books = Book.objects.filter(author_obj__name=author.name)
+	data = author.to_dict()
+	data['books'] = [b.to_dict() for b in books]
+	data['photo_url'] = '/media/authors/' + os.path.basename(data['photo_url'])
+	return render(req, 'author.html', data)
 
 def upload_book(req):
 	global nlp
@@ -197,10 +204,12 @@ def upload_book(req):
 
 		book.save()
 		genres = meta['subjects'].lower().split(',')
+
 		for g in genres:
 			g_obj = Genre.objects.get_or_create(genre=g)[0]
 			book.genres.add(g_obj)
-	
+
+		create_book_graph()
 		return redirect(home)
 
 def get_author_description(author):
@@ -236,29 +245,49 @@ def view_book(request, book_id):
     	rating = 0
     	review = ""
 
-    reviews = Rating.objects.filter(book=book).order_by('-created_at')[:5]
-    text_reviews = list()
-    if len(reviews) > 0:
-    	for r in reviews:
-    		text_reviews.append(r.text)
-
     bdict = book.to_dict()
     bdict['user_rating'] = rating
-    bdict['text_reviews'] = ['HELLO']
     bdict['user_review'] = review
 
     return JsonResponse(bdict)
 
 def faculty(request):
     books = Book.objects.all()
-    return render(request,'faculty.html',{"books":books})
+    users=UserProfile.objects.all()
+    data=list()
+    for user in users:
+        data.append(
+            {
+                'user':user.user.username,
+                'books':[books.to_dict() for books in user.read_books.all()]
+            }
+        )
+    return render(request,'faculty.html',{"data":data})
 
 
 def view_book_html(request, book_id, book_slug):
-    return render(request, 'book.html', {
-        'id': book_id,
-        'book_name': ' '.join(book_slug.split('-')).title()
-    })
+	book = get_object_or_404(Book, pk=book_id)
+	reviews = Rating.objects.filter(book=book).order_by('-created_at')[:5]
+	text_reviews = list()
+	if len(reviews) > 0:
+		for r in reviews:
+			if len(r.text.strip()) > 0:
+				text_reviews.append({
+					'text': r.text,
+					'rating': [i for i in range(round(r.rating))],
+					'user': r.user.username,
+				})
+
+	similar = list()
+	similar.extend([book.r1.to_dict(), book.r2.to_dict(), book.r3.to_dict(), book.r4.to_dict()])
+
+	return render(request, 'book.html', {
+		'id': book_id,
+		'book_name': ' '.join(book_slug.split('-')).title(),
+		'text_reviews': text_reviews,
+		'similar': similar,
+		'author_url': '/author/' + str(book.author_obj.id) + '/',
+	})
 
 
 def read_book(request, book_id):
@@ -338,6 +367,7 @@ def contact(request):
             return redirect(home)
         else:
             return render(request, 'contact.html', {})
+
     elif request.method == 'POST':
         surname = request.POST['nom']
         email = request.POST['email']
@@ -363,6 +393,14 @@ def contact(request):
 
 def about(request):
     return render(request, 'about.html', {})
+
+def search(request):
+	query = request.GET.get('s', '')
+	books = Book.objects.filter(Q(title__icontains=query) | Q(author__icontains=query))
+	data = [b.to_dict() for b in books]
+	return JsonResponse({
+		'data': data
+		})
 
 # Authentication --------------------------------------------------------------
 def signup(request):
@@ -404,9 +442,12 @@ def signin(request):
     elif request.method == 'POST':
         username = request.POST['name']
         password = request.POST['pass']
+
         user = authenticate(username=username, password=password)
+
         if user is not None:
             login(request, user)
+
             return redirect(reverse('home'))
 
         else:

@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from math import inf
-from sklearn.preprocessing
 from ..models import Rating, Book
 
 class Node():
@@ -20,12 +19,12 @@ class Graph():
 		self.nodes = list()
 
 		for book in books:
-			print('INIT', type(book))
+			# print('INIT', type(book))
 			self.add_node(Node(book))
 
 	def add_node(self, newnode):
 		for node in self.nodes:
-			print(type(node), type(node.book))
+			# print(type(node), type(node.book))
 			w = self.get_weight(node.book, newnode.book)
 			node.add_neighbor(newnode, w)
 			newnode.add_neighbor(node, w)
@@ -34,7 +33,6 @@ class Graph():
 
 
 	def get_weight(self, b1, b2):
-		print(type(b1), type(b2))
 		w = 0
 		g1, g2 = map(lambda x: x.genre.lower().strip().split(','), (b1, b2))
 		a1, a2 = b1.author, b2.author
@@ -66,12 +64,29 @@ class Graph():
 		for node in self.nodes:
 			print(node.book.title)
 			n = sorted(node.neighbors, key=sort_order)
-			print([x[0].book.title for x in n[:3]])
+			print([x[0].book.title for x in n[:4]])
 			print('--------------------------')
+
+
+	def save(self):
+		def sort_order(k):
+			return k[1]
+
+		data = list()
+		for node in self.nodes:
+			n = sorted(node.neighbors, key=sort_order)
+			similar = [x[0].book for x in n[:4]]
+			print('SAVE', similar)
+			node.book.r1, node.book.r2, node.book.r3, node.book.r4 = similar
+			node.book.save()
+
+			# print('--------------------------')
+
 
 
 def create_book_graph():
 	books = [b for b in Book.objects.all()]
 	g = Graph(books)
-	g.display()
+	# g.display()
+	g.save()
 	
